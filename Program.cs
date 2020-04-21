@@ -24,11 +24,15 @@ namespace SeaFight
 
             Game game = new Game(10, FleetLayout.classic);
 
+            //game.RegisterPlayer(new Players.Monkey(generator));
             game.RegisterPlayer(new Players.Monkey(generator));
             game.RegisterPlayer(new Players.Monkey(generator));
+            game.RegisterPlayer(new Players.Baby(generator));
+            game.RegisterPlayer(new Players.Kid(generator));
 
-            var winner = game.Play();
-            Console.WriteLine(string.Format("GAME OVER! Winner {0}", winner));
+            var stats = game.Play();
+            Console.WriteLine(string.Format("GAME OVER! Winner: {0}", stats.winner));
+            Console.WriteLine("Total shots: {0:d}", stats.totalShots);
         }
     }
 }

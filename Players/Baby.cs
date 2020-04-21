@@ -6,20 +6,23 @@ using System.Threading.Tasks;
 
 namespace SeaFight.Players
 {
-    class Monkey : Player, IHaveSkill
+    class Baby : Player, IHaveSkill
     {
         private readonly Random rnd;
 
-        public Skill Skill { get { return Skill.Monkey; } }
+        public Skill Skill
+        {
+            get { return Skill.Baby; }
+        }
 
-        public Monkey(Random generator = null) : base(AiFeatures.None)
+        public Baby(Random generator = null) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots)
         {
             rnd = generator ?? new Random();
         }
 
         public override string ToString()
         {
-            return string.Format("Monkey #{0:d}", Id);
+            return string.Format("Baby #{0:d}", Id);
         }
 
         public override Fleet PlaceFleet(FleetLayout layout, Board board)
@@ -29,21 +32,20 @@ namespace SeaFight.Players
 
         public override Shot Shoot(IEnumerable<HitBoard> boards)
         {
-            var bs = boards.ToArray();
-            var board = bs[rnd.Next() % bs.Length];
+            var board = PreSelectBoard(boards).PickRandom(rnd);
+            var unknownIdxs = GetUnknownCellsIdxs(board);
+            var idx = unknownIdxs.PickRandom(rnd);
+
             return new Shot
             {
                 rival = board.Rival,
-                coords = new Cell
-                {
-                    Col = rnd.Next() % board.Dim,
-                    Row = rnd.Next() % board.Dim,
-                }
+                coords = board.Unplain(idx),
             };
         }
 
-        public override void UpdateHits(IEnumerable<HitBoard> board, Hit hit)
+        public override void UpdateHits(IEnumerable<HitBoard> boards, Hit hit)
         {
+            SaveHit(boards, hit);
         }
     }
 }

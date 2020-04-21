@@ -3,6 +3,7 @@
     class BoardOf<TElem>
     {
         protected readonly TElem[] cells;
+        public TElem[] Cells { get { return cells; } }
         public int Dim { get; private set; }
         public int Size { get; private set; }
 
@@ -21,7 +22,10 @@
         {
             return cell.Plain(Dim);
         }
-
+        public Cell Unplain(int idx)
+        {
+            return new Cell(idx % Dim, idx / Dim);
+        }
         public TElem At(int col, int row)
         {
             return cells[Plain(col, row)];
@@ -36,11 +40,11 @@
             return cell.Col < Dim && cell.Row < Dim && cell.Col >= 0 && cell.Row >= 0;
         }
 
-        protected void Set(int col, int row, TElem value)
+        public void Set(int col, int row, TElem value)
         {
             cells[Plain(col, row)] = value;
         }
-        protected void Set(Cell cell, TElem value)
+        public void Set(Cell cell, TElem value)
         {
             cells[Plain(cell)] = value;
         }

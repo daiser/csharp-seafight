@@ -4,9 +4,10 @@
     {
         None = 0,
         Monkey = 0,
-        Child = 1,
-        Adult = 2,
-        Pro = 3,
+        Baby = 1,
+        Kid = 2,
+        Adult = 3,
+        Pro = 4,
     }
 
 }
