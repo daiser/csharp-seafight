@@ -7,7 +7,7 @@ namespace SeaFight
         public Fleet(IEnumerable<Ship> ships) : base(ships) { }
         public Fleet() : base() { }
 
-        public ShotEffect TakeShot(Cell at)
+        public ShotEffect TakeShot(Pos at)
         {
             foreach (var ship in this)
             {
@@ -23,7 +23,7 @@ namespace SeaFight
             {
                 foreach (var cell in ship)
                 {
-                    if (cell.Live) return true;
+                    if (cell.Value) return true;
                 }
             }
             return false;

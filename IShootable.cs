@@ -2,6 +2,6 @@
 {
     interface IShootable
     {
-        ShotEffect TakeShot(Cell coord);
+        ShotEffect TakeShot(Pos coord);
     }
 }

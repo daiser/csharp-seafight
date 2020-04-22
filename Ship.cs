@@ -9,7 +9,7 @@ namespace SeaFight
     {
 
         private readonly List<Target> cells;
-        public Cell Location { get; private set; }
+        public Pos Location { get; private set; }
         public int Size { get { return cells.Count; } }
         public int Count
         {
@@ -20,13 +20,13 @@ namespace SeaFight
         {
             get { return cells[index]; }
         }
-        public Ship(IEnumerable<Cell> placement)
+        public Ship(IEnumerable<Pos> placement)
         {
-            cells = placement.Select(e => new Target(e.Col, e.Row) { Live = true }).ToList();
+            cells = placement.Select(e => new Target(e.Col, e.Row)).ToList();
             if (Count < 1) throw new ArgumentException("Empty ship", "placement");
             Location = placement.First();
         }
-        private int IndexOf(Cell cell)
+        private int IndexOf(Pos cell)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -34,12 +34,12 @@ namespace SeaFight
             }
             return -1;
         }
-        public ShotEffect TakeShot(Cell at)
+        public ShotEffect TakeShot(Pos at)
         {
             var idx = IndexOf(at);
             if (idx == -1) return ShotEffect.Miss;
-            this[idx].Live = false;
-            return this.All(e => !e.Live) ? ShotEffect.Kill : ShotEffect.Hit;
+            this[idx].Value = false;
+            return this.All(e => !e.Value) ? ShotEffect.Kill : ShotEffect.Hit;
         }
 
         public IEnumerator<Target> GetEnumerator()

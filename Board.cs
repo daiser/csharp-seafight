@@ -15,7 +15,7 @@ namespace SeaFight
         {
         }
 
-        private bool CheckPlacement(IEnumerable<Cell> places)
+        private bool CheckPlacement(IEnumerable<Pos> places)
         {
             foreach (var shipCell in places)
             {
@@ -31,7 +31,7 @@ namespace SeaFight
             return true;
         }
 
-        public Cell[] PlaceShip(in Cell at, in ShipBlueprint proto, in Orientation orientation)
+        public Pos[] PlaceShip(in Pos at, in ShipBlueprint proto, in Orientation orientation)
         {
             var placement = at.Make(orientation, proto.Size);
 
@@ -49,7 +49,7 @@ namespace SeaFight
             for (int i = 0; i < Size; i++) cells[i] = CELL_FREE;
         }
 
-        public Cell[] PlaceShipRandom(in ShipBlueprint proto, in Random generator = null)
+        public Pos[] PlaceShipRandom(in ShipBlueprint proto, in Random generator = null)
         {
             Random gen = generator ?? new Random();
             List<Placement> placements = new List<Placement>();
@@ -57,7 +57,7 @@ namespace SeaFight
             {
                 for (int col = 0; col < Dim; col++)
                 {
-                    Cell cell = new Cell { Col = col, Row = row };
+                    Pos cell = new Pos { Col = col, Row = row };
                     var colPlacement = cell.MakeColumn(proto.Size);
                     var rowPlacement = cell.MakeRow(proto.Size);
 
@@ -115,7 +115,7 @@ namespace SeaFight
 
         struct Placement
         {
-            public Cell cell;
+            public Pos cell;
             public Orientation orientation;
         }
     }

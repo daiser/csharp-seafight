@@ -3,6 +3,6 @@
     struct Shot
     {
         public ICompetitor rival;
-        public Cell coords;
+        public Pos coords;
     }
 }

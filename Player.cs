@@ -63,9 +63,14 @@ namespace SeaFight
             return selectedBoard;
         }
 
-        protected IEnumerable<int> GetUnknownCellsIdxs(HitBoard board)
+        protected static IEnumerable<int> GetUnknownCellsIdxs(HitBoard board)
         {
             return board.Cells.Select((c, i) => new { cell = c, idx = i }).Where(e => e.cell == CELL_UNKNOWN).Select(e => e.idx);
+        }
+
+        protected static IEnumerable<int> GetCellIndexes(HitBoard board, params byte[] values)
+        {
+            return board.Cells.Select((c, i) => new { val = c, idx = i }).Where(e => values.Contains(e.val)).Select(e => e.idx);
         }
 
         public override string ToString()

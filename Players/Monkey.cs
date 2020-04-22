@@ -34,7 +34,7 @@ namespace SeaFight.Players
             return new Shot
             {
                 rival = board.Rival,
-                coords = new Cell
+                coords = new Pos
                 {
                     Col = rnd.Next() % board.Dim,
                     Row = rnd.Next() % board.Dim,

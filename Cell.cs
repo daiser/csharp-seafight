@@ -1,80 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace SeaFight
 {
-    class Cell
+    class Cell<TValue> : Pos
     {
-        public int Col;
-        public int Row;
+        private const string NULL_VALUE = "<null>";
 
+        public TValue Value;
         public Cell() { }
-        public Cell(int col, int row)
+        public Cell(int col, int row) : base(col, row) { }
+        public Cell(int col, int row, TValue value) : base(col, row)
         {
-            Col = col;
-            Row = row;
+            Value = value;
         }
-        public Cell[] Neighbours()
+        public Cell(Cell<TValue> other)
         {
-            List<Cell> cells = new List<Cell>();
-            for (int col = -1; col < 2; col++)
-            {
-                for (int row = -1; row < 2; row++)
-                {
-                    if (row == 0 && col == 0) continue;
-                    cells.Add(new Cell { Col = Col + col, Row = Row + row });
-                }
-            }
-            return cells.ToArray();
+            if (other == null) throw new ArgumentNullException("other");
+            Col = other.Col;
+            Row = other.Row;
+            Value = other.Value;
         }
-
-        public Cell[] Make(in Orientation orientation, in int size)
+        public Cell(Pos pos, TValue value)
         {
-            List<Cell> cells = new List<Cell> { this };
-            for (int i = 1; i < size; i++)
-            {
-                cells.Add(new Cell { Col = Col + (orientation == Orientation.Column ? i : 0), Row = Row + (orientation == Orientation.Row ? i : 0) });
-            }
-
-            return cells.ToArray();
+            if (pos == null) throw new ArgumentNullException("pos");
+            Col = pos.Col;
+            Row = pos.Row;
+            Value = value;
         }
-
-        public Cell[] MakeRow(in int size)
-        {
-            return Make(Orientation.Row, size);
-        }
-        public Cell[] MakeColumn(in int size)
-        {
-            return Make(Orientation.Column, size);
-        }
-
         public override bool Equals(object obj)
         {
-            if (!(obj is Cell o)) return false;
-            return o.Col==Col&&o.Row==Row;
+            bool result = false;
+            Pos pos = obj as Pos;
+            Cell<TValue> cell = obj as Cell<TValue>;
+            if (pos != null) result = base.Equals(pos);
+            if (cell != null) result = result && Value != null && Value.Equals(cell.Value);
+            return result;
         }
         public override int GetHashCode()
         {
-            return (Col ^ Row).GetHashCode();
+            int hash = base.GetHashCode();
+            if (Value != null) hash ^= Value.GetHashCode();
+            return hash;
         }
-
-        public int Plain(int row_size)
-        {
-            return Row * row_size + Col;
-        }
-
         public override string ToString()
         {
-            return string.Format(string.Format("({0:d},{1:d})", Col, Row));
-        }
-    }
-
-    class Target : Cell
-    {
-        public bool Live = false;
-        public Target(int col, int row) : base()
-        {
-            Col = col;
-            Row = row;
+            return string.Format("({0:d},{1:d})={2}", Col, Row, (object)Value ?? NULL_VALUE);
         }
     }
 }

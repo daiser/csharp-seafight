@@ -45,12 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cell.cs" />
     <Compile Include="Ext.cs" />
+    <Compile Include="Figure.cs" />
     <Compile Include="Fleet.cs" />
     <Compile Include="FleetLayout.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardOf.cs" />
-    <Compile Include="Cell.cs" />
+    <Compile Include="Players\Adult.cs" />
+    <Compile Include="Pos.cs" />
     <Compile Include="Forms\LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +83,7 @@
     <Compile Include="Ship.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="ShotEffect.cs" />
+    <Compile Include="Target.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

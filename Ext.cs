@@ -19,5 +19,13 @@ namespace SeaFight
             }
             throw new InvalidOperationException("Can't pick random value");
         }
+
+        public static void AddIf<T>(this List<T> list, T value, bool condition)
+        {
+            if (condition)
+            {
+                list.Add(value);
+            }
+        }
     }
 }
