@@ -14,7 +14,6 @@ namespace SeaFight
         private readonly List<ICompetitor> players = new List<ICompetitor>();
         private readonly List<HitBoard> hitBoards = new List<HitBoard>();
         private readonly Dictionary<int, Fleet> fleets = new Dictionary<int, Fleet>();
-        private Forms.LogForm log;
         public Game(int dim, FleetLayout fleetLayout)
         {
             Dim = dim;
@@ -26,7 +25,7 @@ namespace SeaFight
             players.Add(player);
         }
 
-        public GameStats Play()
+        public void Play()
         {
             if (players.Count < 2) throw new InvalidOperationException("Not enough players");
 
@@ -41,6 +40,8 @@ namespace SeaFight
                 if (fleet == null) throw new InvalidOperationException(string.Format("Player #{0:d} failed to place fleet", player.Id));
                 fleets.Add(player.Id, fleet);
 
+                //fleets.Add(player.Id, Fleet.fixed_0);
+
                 foreach (var rival in players)
                 {
                     hitBoards.Add(new HitBoard(player, rival, Dim));
@@ -48,101 +49,76 @@ namespace SeaFight
             }
 
             List<ICompetitor> kia = new List<ICompetitor>();
-            GameStats stats = new GameStats();
-            using (log = new Forms.LogForm())
+            int totalShots = 0;
+            while (true) // Infinite game loop
             {
-                log.Show();
-                while (stats.winner == null)
+                foreach (var activePlayer in players)
                 {
-                    var alive = players.Where(p => !kia.Contains(p));
-                    if (alive.Count() == 1)
+                    while (!kia.Contains(activePlayer))
                     {
-                        stats.winner = alive.First();
-                        continue;
-                    }
-                    foreach (var activePlayer in alive)
-                    {
-                        while (true)
+                        Debug.WriteLine("Active=" + activePlayer);
+                        var availableHitBoards = hitBoards.Where(h => h.Owner.Equals(activePlayer) && !kia.Contains(h.Rival));
+                        if (availableHitBoards.Count() == 1)
                         {
-                            if (kia.Contains(activePlayer))
-                            {
-                                break;
-                            }
-
-                            var availableHitBoards = hitBoards.Where(h => h.Owner.Equals(activePlayer) && !kia.Contains(h.Rival));
-                            if (availableHitBoards.Count() == 1)
-                            {
-                                break;
-                            }
-
-                            var shot = activePlayer.Shoot(availableHitBoards);
-                            var rivalsFleet = fleets[shot.rival.Id];
-                            var effect = rivalsFleet.TakeShot(shot.coords);
-                            var hit = new Hit
-                            {
-                                attacker = activePlayer,
-                                target = shot.rival,
-                                coords = shot.coords,
-                                effect = effect,
-                            };
-                            if (hit.attacker.Equals(hit.target))
-                            {
-                                log.Message(string.Format("Player '{0}' hit himself", hit.attacker));
-                                log.Refresh();
-                            }
-                            DisplayHit(hit);
-                            //Console.ReadKey();
-                            //if (effect != ShotEffect.Miss)
-                            //Console.WriteLine(hit);
-                            stats.totalShots++;
-                            System.Threading.Thread.Sleep(100);
-                            foreach (var player in alive)
-                            {
-                                var hitboard = hitBoards.Where(h => h.Owner.Equals(player) && !kia.Contains(h.Rival));
-                                player.UpdateHits(hitboard, hit);
-                            }
-                            if (!rivalsFleet.IsAlive())
-                            {
-                                kia.Add(shot.rival);
-                                log.Message(string.Format("{0}: gg", hit.target));
-                                log.Refresh();
-                            }
-                            if (effect == ShotEffect.Miss) break;
+                            throw new GameOverException(activePlayer, totalShots);
                         }
+
+                        var shot = activePlayer.Shoot(availableHitBoards);
+                        var rivalsFleet = fleets[shot.rival.Id];
+                        var effect = rivalsFleet.TakeShot(shot.coords);
+                        var hit = new Hit
+                        {
+                            attacker = activePlayer,
+                            target = shot.rival,
+                            coords = shot.coords,
+                            effect = effect,
+                        };
+                        DisplayHit(hit);
+                        Debug.WriteLine(hit);
+                        //if (effect != ShotEffect.Miss)
+                        //Console.WriteLine(hit);
+                        totalShots++;
+                        //Console.ReadKey();
+                        System.Threading.Thread.Sleep(100);
+                        foreach (var player in players)
+                        {
+                            var hitboard = hitBoards.Where(h => h.Owner.Equals(player) && !kia.Contains(h.Rival));
+                            player.UpdateHits(hitboard, hit);
+                        }
+                        if (effect == ShotEffect.Kill && !rivalsFleet.IsAlive())
+                        {
+                            kia.Add(shot.rival);
+                            Debug.WriteLine("{0}: GG", hit.target);
+                        }
+                        if (effect == ShotEffect.Miss) break;
                     }
                 }
-                log.Close();
             }
-            Console.SetCursorPosition(0, 12);
-
-            return stats;
         }
+
+        private const string HIT = "H";
+        private const string MISS = "-";
+        private const string KILL = "K";
 
         private void DisplayHit(Hit hit)
         {
             var offset = hit.target.Id - 1;
             var top = 0;
-            var left = offset * (Dim + 3);
+            var left = offset * (Dim + 5);
 
             Console.SetCursorPosition(left + hit.coords.Col, top + hit.coords.Row);
-            char c = '.';
             switch (hit.effect)
             {
                 case ShotEffect.Hit:
+                    Console.Write(HIT);
+                    break;
                 case ShotEffect.Kill:
-                    c = 'X';
+                    Console.Write(KILL);
                     break;
                 default:
-                    c = '-';
+                    Console.Write(MISS);
                     break;
             }
-            Console.WriteLine(c);
         }
-    }
-
-    class GameStats
-    {
-        public long totalShots = 0;
-        public ICompetitor winner = null;
     }
 }

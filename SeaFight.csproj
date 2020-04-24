@@ -52,14 +52,9 @@
     <Compile Include="FleetLayout.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardOf.cs" />
-    <Compile Include="Players\Adult.cs" />
+    <Compile Include="GameOverException.cs" />
+    <Compile Include="Players\Amateur.cs" />
     <Compile Include="Pos.cs" />
-    <Compile Include="Forms\LogForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LogForm.Designer.cs">
-      <DependentUpon>LogForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="Hit.cs" />
     <Compile Include="HitBoard.cs" />
@@ -71,8 +66,8 @@
     <Compile Include="Player.cs" />
     <Compile Include="Players\AiFeatures.cs" />
     <Compile Include="Players\IHaveSkill.cs" />
-    <Compile Include="Players\Baby.cs" />
-    <Compile Include="Players\Kid.cs" />
+    <Compile Include="Players\Noob.cs" />
+    <Compile Include="Players\Beginner.cs" />
     <Compile Include="Players\Monkey.cs" />
     <Compile Include="Players\Skill.cs" />
     <Compile Include="Program.cs" />
@@ -87,11 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Forms\LogForm.resx">
-      <DependentUpon>LogForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

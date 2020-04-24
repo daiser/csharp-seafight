@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace SeaFight.Players
 {
-    class Kid : Player, IHaveSkill
+    class Noob : Player, IHaveSkill
     {
-        public Skill Skill
-        {
-            get { return Skill.Kid; }
-        }
-
         private readonly Random rnd;
 
-        public Kid(Random generator) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots)
+        public Skill Skill
+        {
+            get { return Skill.Noob; }
+        }
+
+        public Noob(Random generator = null) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots)
         {
             rnd = generator ?? new Random();
         }
 
         public override string ToString()
         {
-            return string.Format("Kid #{0:d}", Id);
+            return string.Format("Noob #{0:d}", Id);
         }
 
         public override Fleet PlaceFleet(FleetLayout layout, Board board)

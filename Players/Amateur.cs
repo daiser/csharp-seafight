@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SeaFight.Players
 {
-    class Adult : Player, IHaveSkill
+    class Amateur : Player, IHaveSkill
     {
         private static readonly Pos stepUp = new Pos(0, -1);
         private static readonly Pos stepDown = new Pos(0, 1);
         private static readonly Pos stepLeft = new Pos(-1, 0);
         private static readonly Pos stepRight = new Pos(1, 0);
 
-        public Skill Skill { get { return Skill.Adult; } }
+        public Skill Skill { get { return Skill.Amature; } }
         private readonly Random rnd;
-        public Adult(Random generator) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots)
+        public Amateur(Random generator) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots)
         {
             rnd = generator;
         }
@@ -25,15 +26,22 @@ namespace SeaFight.Players
             return board.PlaceFleet(layout, rnd);
         }
 
+        public override string ToString()
+        {
+            return string.Format("Amateur #{0:d}", Id);
+        }
+
         public override Shot Shoot(IEnumerable<HitBoard> boards)
         {
-            var board = PreSelectBoard(boards).PickRandom(rnd);
+            var preSelectedBoards = PreSelectBoard(boards);
 
-            var hits = GetCellIndexes(board, CELL_HIT);
-            if (hits.Count() > 0)
+            try
             {
+                var board = preSelectedBoards.Where(b => b.Cells.Contains(CELL_HIT)).PickRandom(rnd);
+                var hits = GetCellIndexes(board, CELL_HIT);
                 var target = board.Unplain(hits.PickRandom(rnd));
                 var fig = new Figure(board.FindSolid(target, CELL_HIT));
+
                 var shots = new List<Pos>();
                 if (fig.IsRowOriented())
                 {
@@ -50,7 +58,9 @@ namespace SeaFight.Players
                     shots.AddIf(bottom, board.Contains(bottom) && board.At(bottom) == CELL_UNKNOWN);
                 }
 
-                if (shots.Count == 0) throw new InvalidOperationException("No target");
+                if (shots.Count == 0) {
+                    throw new InvalidOperationException("No target");
+                }
                 var shot = shots.PickRandom(rnd);
                 return new Shot
                 {
@@ -58,16 +68,19 @@ namespace SeaFight.Players
                     coords = shot,
                 };
             }
-
-            var unknownIdxs = GetUnknownCellsIdxs(board);
-            var idx = unknownIdxs.PickRandom(rnd);
-
-            return new Shot
+            catch (InvalidOperationException x)
             {
-                rival = board.Rival,
-                coords = board.Unplain(idx),
-            };
+                Debug.WriteLine("{0}: {1}", this, x.Message);
+                var board = preSelectedBoards.PickRandom(rnd);
+                var unknownIdxs = GetUnknownCellsIdxs(board);
+                var idx = unknownIdxs.PickRandom(rnd);
 
+                return new Shot
+                {
+                    rival = board.Rival,
+                    coords = board.Unplain(idx),
+                };
+            }
         }
 
         private static void SetMisses(HitBoard board, Figure figure, params Pos[] offsets)

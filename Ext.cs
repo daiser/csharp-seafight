@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace SeaFight
     {
         public static T PickRandom<T>(this IEnumerable<T> values, Random generator = null)
         {
+            Debug.WriteLine("{0}, cnt={1:d}", values, values.Count());
             var rnd = generator ?? new Random();
             var count = rnd.Next(0, values.Count());
             foreach (T value in values)

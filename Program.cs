@@ -22,19 +22,32 @@ namespace SeaFight
             //Console.WriteLine(ship.TakeShot(new Pos(0, 1)));
             //return;
 
+            Console.SetWindowSize(120, 20);
+            Console.SetBufferSize(120, 20);
+
             Game game = new Game(10, FleetLayout.classic);
 
-            //game.RegisterPlayer(new Players.Monkey(generator));
             game.RegisterPlayer(new Players.Monkey(generator));
             game.RegisterPlayer(new Players.Monkey(generator));
             game.RegisterPlayer(new Players.Monkey(generator));
-            game.RegisterPlayer(new Players.Baby(generator));
-            game.RegisterPlayer(new Players.Kid(generator));
-            game.RegisterPlayer(new Players.Adult(generator));
+            game.RegisterPlayer(new Players.Monkey(generator));
+            game.RegisterPlayer(new Players.Monkey(generator));
+            //game.RegisterPlayer(new Players.Noob(generator));
+            //game.RegisterPlayer(new Players.Beginner(generator));
+            //game.RegisterPlayer(new Players.Amateur(generator));
+            game.RegisterPlayer(new Players.Amateur(generator));
 
-            var stats = game.Play();
-            Console.WriteLine(string.Format("GAME OVER! Winner: {0}", stats.winner));
-            Console.WriteLine("Total shots: {0:d}", stats.totalShots);
+            try
+            {
+                game.Play();
+            } catch(GameOverException gox)
+            {
+                Console.SetCursorPosition(0, 12);
+                Console.WriteLine(string.Format("GAME OVER! Winner: {0}", gox.Winner));
+                Console.WriteLine("Total shots: {0:d}", gox.TotalShots);
+            }
+
+            Console.ReadLine();
         }
     }
 }
