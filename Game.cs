@@ -25,7 +25,7 @@ namespace SeaFight
             players.Add(player);
         }
 
-        public void Play()
+        public void Play(bool visialize = true)
         {
             if (players.Count < 2) throw new InvalidOperationException("Not enough players");
 
@@ -73,13 +73,16 @@ namespace SeaFight
                             coords = shot.coords,
                             effect = effect,
                         };
-                        DisplayHit(hit);
                         Debug.WriteLine(hit);
                         //if (effect != ShotEffect.Miss)
                         //Console.WriteLine(hit);
                         totalShots++;
                         //Console.ReadKey();
-                        System.Threading.Thread.Sleep(100);
+                        if (visialize)
+                        {
+                            System.Threading.Thread.Sleep(100);
+                            DisplayHit(hit);
+                        }
                         foreach (var player in players)
                         {
                             var hitboard = hitBoards.Where(h => h.Owner.Equals(player) && !kia.Contains(h.Rival));

@@ -8,6 +8,8 @@ namespace SeaFight
 {
     class Program
     {
+        private const int GAMES_TO_PLAY = 1000;
+
         static void Main(string[] args)
         {
             Random generator = new Random();
@@ -22,30 +24,36 @@ namespace SeaFight
             //Console.WriteLine(ship.TakeShot(new Pos(0, 1)));
             //return;
 
-            Console.SetWindowSize(120, 20);
-            Console.SetBufferSize(120, 20);
+            List<Player> players = new List<Player> { new Players.Amateur(generator) };
+            double winRate = 1.0;
 
-            Game game = new Game(10, FleetLayout.classic);
-
-            game.RegisterPlayer(new Players.Monkey(generator));
-            game.RegisterPlayer(new Players.Monkey(generator));
-            game.RegisterPlayer(new Players.Monkey(generator));
-            game.RegisterPlayer(new Players.Monkey(generator));
-            game.RegisterPlayer(new Players.Monkey(generator));
-            //game.RegisterPlayer(new Players.Noob(generator));
-            //game.RegisterPlayer(new Players.Beginner(generator));
-            //game.RegisterPlayer(new Players.Amateur(generator));
-            game.RegisterPlayer(new Players.Amateur(generator));
-
-            try
+            while (winRate > 0.5)
             {
-                game.Play();
-            } catch(GameOverException gox)
-            {
-                Console.SetCursorPosition(0, 12);
-                Console.WriteLine(string.Format("GAME OVER! Winner: {0}", gox.Winner));
-                Console.WriteLine("Total shots: {0:d}", gox.TotalShots);
+                players.Add(new Players.Beginner(generator));
+                int amateurWins = 0;
+                for (int gameNo = 0; gameNo < GAMES_TO_PLAY; gameNo++)
+                {
+                    Game game = new Game(10, FleetLayout.classic);
+                    foreach (var player in players)
+                    {
+                        game.RegisterPlayer(player);
+                    }
+
+                    try
+                    {
+                        game.Play(false);
+                    }
+                    catch (GameOverException gox)
+                    {
+                        if (gox.Winner.Id == 1) amateurWins++;
+                    }
+                }
+                winRate = (double)amateurWins / GAMES_TO_PLAY;
+
+                int monkeysQty = players.Where(p => p is Players.Beginner).Count();
+                Console.WriteLine("{0:d} monkeys: {1:F2}%", monkeysQty, winRate * 100);
             }
+
 
             Console.ReadLine();
         }

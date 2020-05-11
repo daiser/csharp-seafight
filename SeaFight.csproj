@@ -54,6 +54,7 @@
     <Compile Include="BoardOf.cs" />
     <Compile Include="GameOverException.cs" />
     <Compile Include="Players\Amateur.cs" />
+    <Compile Include="Players\Pro.cs" />
     <Compile Include="Pos.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Hit.cs" />
