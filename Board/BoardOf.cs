@@ -45,6 +45,13 @@ namespace SeaFight.Board
         public void Set(Pos cell, TElem value) { Cells[ToPlain(cell)] = value; }
 
 
+        public void ResetBoard(TElem newValue) {
+            for (var idx = 0; idx < Size; idx++) {
+                Cells[idx] = newValue;
+            }
+        }
+
+
         public Cell<TElem>[] FindSolid(Pos start, params TElem[] values) {
             var cells = new List<Cell<TElem>>();
 

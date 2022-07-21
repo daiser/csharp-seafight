@@ -39,9 +39,7 @@ namespace SeaFight.Board
         }
 
 
-        public void Reset() {
-            for (var i = 0; i < Size; i++) Cells[i] = CELL_FREE;
-        }
+        public void Reset() { ResetBoard(CELL_FREE); }
 
 
         public Pos[] PlaceShipRandom(in int shipSize, in Random generator = null) {
