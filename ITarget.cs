@@ -1,6 +1,6 @@
 ﻿namespace SeaFight
 {
-    interface IShootable
+    interface ITarget
     {
         ShotEffect TakeShot(Pos coord);
     }

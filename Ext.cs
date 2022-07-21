@@ -14,7 +14,7 @@ namespace SeaFight
             Debug.WriteLine("{0}, cnt={1:d}", values, values.Count());
             var rnd = generator ?? new Random();
             var count = rnd.Next(0, values.Count());
-            foreach (T value in values)
+            foreach (var value in values)
             {
                 count--;
                 if (count < 0) return value;

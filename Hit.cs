@@ -2,14 +2,14 @@
 {
     struct Hit
     {
-        public IIdentifiableCompetitor attacker;
-        public IIdentifiableCompetitor target;
-        public Pos coords;
-        public ShotEffect effect;
+        public IIdentifiableCompetitor Attacker;
+        public IIdentifiableCompetitor Target;
+        public Pos Coords;
+        public ShotEffect Effect;
 
         public override string ToString()
         {
-            return string.Format("{0} -> {1} @ {2} = {3}", attacker, target, coords, effect);
+            return $"{Attacker} -> {Target} @ {Coords} = {Effect}";
         }
     }
 }

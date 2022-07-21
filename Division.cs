@@ -4,14 +4,15 @@ namespace SeaFight
 {
     class Division
     {
-        public ShipBlueprint Proto { get; private set; }
-        public int Number { get; private set; }
+        public ShipBlueprint Proto { get; }
 
-        public Division(in ShipBlueprint proto, in int number)
-        {
-            if (number < 1) throw new ArgumentException("invalid number of ships", "number");
-            Proto = proto ?? throw new ArgumentNullException("proto");
-            Number = number;
+        public int NumberOfShips { get; }
+
+
+        public Division(in ShipBlueprint shipBlueprint, in int numberOfShips) {
+            if (numberOfShips < 1) throw new ArgumentException("invalid number of ships", nameof(numberOfShips));
+            Proto = shipBlueprint ?? throw new ArgumentNullException(nameof(shipBlueprint));
+            NumberOfShips = numberOfShips;
         }
     }
 }

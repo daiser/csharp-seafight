@@ -7,6 +7,5 @@ using System.Threading.Tasks;
 namespace SeaFight.Players
 {
     class Pro
-    {
-    }
+    { }
 }

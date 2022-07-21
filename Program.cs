@@ -33,7 +33,7 @@ namespace SeaFight
                 int amateurWins = 0;
                 for (int gameNo = 0; gameNo < GAMES_TO_PLAY; gameNo++)
                 {
-                    Game game = new Game(10, FleetLayout.classic);
+                    Game game = new Game(10, FleetLayout.Classic);
                     foreach (var player in players)
                     {
                         game.RegisterPlayer(player);

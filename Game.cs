@@ -64,14 +64,14 @@ namespace SeaFight
                         }
 
                         var shot = activePlayer.Shoot(availableHitBoards);
-                        var rivalsFleet = fleets[shot.rival.Id];
-                        var effect = rivalsFleet.TakeShot(shot.coords);
+                        var rivalsFleet = fleets[shot.Rival.Id];
+                        var effect = rivalsFleet.TakeShot(shot.Coords);
                         var hit = new Hit
                         {
-                            attacker = activePlayer,
-                            target = shot.rival,
-                            coords = shot.coords,
-                            effect = effect,
+                            Attacker = activePlayer,
+                            Target = shot.Rival,
+                            Coords = shot.Coords,
+                            Effect = effect,
                         };
                         Debug.WriteLine(hit);
                         //if (effect != ShotEffect.Miss)
@@ -90,8 +90,8 @@ namespace SeaFight
                         }
                         if (effect == ShotEffect.Kill && !rivalsFleet.IsAlive())
                         {
-                            kia.Add(shot.rival);
-                            Debug.WriteLine("{0}: GG", hit.target);
+                            kia.Add(shot.Rival);
+                            Debug.WriteLine("{0}: GG", hit.Target);
                         }
                         if (effect == ShotEffect.Miss) break;
                     }
@@ -105,12 +105,12 @@ namespace SeaFight
 
         private void DisplayHit(Hit hit)
         {
-            var offset = hit.target.Id - 1;
+            var offset = hit.Target.Id - 1;
             var top = 0;
             var left = offset * (Dim + 5);
 
-            Console.SetCursorPosition(left + hit.coords.Col, top + hit.coords.Row);
-            switch (hit.effect)
+            Console.SetCursorPosition(left + hit.Coords.Col, top + hit.Coords.Row);
+            switch (hit.Effect)
             {
                 case ShotEffect.Hit:
                     Console.Write(HIT);

@@ -4,5 +4,4 @@
     {
         Skill Skill { get; }
     }
-
 }

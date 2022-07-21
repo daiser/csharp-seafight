@@ -9,5 +9,4 @@
         Amature = 3,
         Pro = 4,
     }
-
 }

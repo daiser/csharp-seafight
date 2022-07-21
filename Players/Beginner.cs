@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeaFight.Players
 {
-    class Beginner : Player, IHaveSkill
+    class Beginner: Player, IHaveSkill
     {
         public Skill Skill
         {
@@ -15,37 +15,28 @@ namespace SeaFight.Players
 
         private readonly Random rnd;
 
-        public Beginner(Random generator) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots)
-        {
+
+        public Beginner(Random generator):
+            base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots) {
             rnd = generator ?? new Random();
         }
 
-        public override string ToString()
-        {
-            return string.Format("Beginner #{0:d}", Id);
-        }
 
-        public override Fleet PlaceFleet(FleetLayout layout, Board board)
-        {
-            return board.PlaceFleet(layout, rnd);
-        }
+        public override string ToString() { return string.Format("Beginner #{0:d}", Id); }
 
-        public override Shot Shoot(IEnumerable<HitBoard> boards)
-        {
+
+        public override Fleet PlaceFleet(FleetLayout layout, Board board) { return board.PlaceFleet(layout, rnd); }
+
+
+        public override Shot Shoot(IEnumerable<HitBoard> boards) {
             var board = PreSelectBoard(boards).PickRandom(rnd);
-            var unknownIdxs = GetUnknownCellsIdxs(board);
+            var unknownIdxs = GetUnknownCellsIndexes(board);
             var idx = unknownIdxs.PickRandom(rnd);
 
-            return new Shot
-            {
-                rival = board.Rival,
-                coords = board.Unplain(idx),
-            };
+            return new Shot { Rival = board.Rival, Coords = board.ToPosition(idx), };
         }
 
-        public override void UpdateHits(IEnumerable<HitBoard> boards, Hit hit)
-        {
-            SaveHit(boards, hit);
-        }
+
+        public override void UpdateHits(IEnumerable<HitBoard> boards, Hit hit) { SaveHit(boards, hit); }
     }
 }

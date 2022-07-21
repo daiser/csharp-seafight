@@ -1,51 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeaFight.Players
 {
-    class Noob : Player, IHaveSkill
+    class Noob: Player, IHaveSkill
     {
-        private readonly Random rnd;
+        private readonly Random m_rnd;
 
-        public Skill Skill
-        {
-            get { return Skill.Noob; }
+        public Skill Skill => Skill.Noob;
+
+
+        public Noob(Random generator = null): base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots) {
+            m_rnd = generator ?? new Random();
         }
 
-        public Noob(Random generator = null) : base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots)
-        {
-            rnd = generator ?? new Random();
+
+        public override string ToString() { return $"Noob #{Id:d}"; }
+
+
+        public override Fleet PlaceFleet(FleetLayout layout, Board board) { return board.PlaceFleet(layout, m_rnd); }
+
+
+        public override Shot Shoot(IEnumerable<HitBoard> boards) {
+            var board = PreSelectBoard(boards).PickRandom(m_rnd);
+            var unknownCellsIndexes = GetUnknownCellsIndexes(board);
+            var idx = unknownCellsIndexes.PickRandom(m_rnd);
+
+            return new Shot { Rival = board.Rival, Coords = board.ToPosition(idx), };
         }
 
-        public override string ToString()
-        {
-            return string.Format("Noob #{0:d}", Id);
-        }
 
-        public override Fleet PlaceFleet(FleetLayout layout, Board board)
-        {
-            return board.PlaceFleet(layout, rnd);
-        }
-
-        public override Shot Shoot(IEnumerable<HitBoard> boards)
-        {
-            var board = PreSelectBoard(boards).PickRandom(rnd);
-            var unknownIdxs = GetUnknownCellsIdxs(board);
-            var idx = unknownIdxs.PickRandom(rnd);
-
-            return new Shot
-            {
-                rival = board.Rival,
-                coords = board.Unplain(idx),
-            };
-        }
-
-        public override void UpdateHits(IEnumerable<HitBoard> boards, Hit hit)
-        {
-            SaveHit(boards, hit);
-        }
+        public override void UpdateHits(IEnumerable<HitBoard> boards, Hit hit) { SaveHit(boards, hit); }
     }
 }
