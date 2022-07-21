@@ -1,4 +1,6 @@
-﻿namespace SeaFight.Board
+﻿using SeaFight.Players;
+
+namespace SeaFight.Board
 {
     class HitBoard: SquareBoardOf<byte>
     {

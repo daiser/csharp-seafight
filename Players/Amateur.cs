@@ -16,15 +16,15 @@ namespace SeaFight.Players
 
         public Skill Skill => Skill.Amature;
 
-        private readonly Random rnd;
+        private readonly Random m_rnd;
 
 
         public Amateur(Random generator): base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots) {
-            rnd = generator;
+            m_rnd = generator;
         }
 
 
-        public override Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, rnd); }
+        public override Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, m_rnd); }
 
 
         public override string ToString() { return $"Amateur #{Id:d}"; }
@@ -34,9 +34,9 @@ namespace SeaFight.Players
             var preSelectedBoards = PreSelectBoard(boards);
 
             try {
-                var board = preSelectedBoards.Where(b => b.Cells.Contains(CELL_HIT)).PickRandom(rnd);
+                var board = preSelectedBoards.Where(b => b.Cells.Contains(CELL_HIT)).PickRandom(m_rnd);
                 var hits = GetCellIndexes(board, CELL_HIT);
-                var target = board.ToPosition(hits.PickRandom(rnd));
+                var target = board.ToPosition(hits.PickRandom(m_rnd));
                 var fig = new Figure(board.FindSolid(target, CELL_HIT));
 
                 var shots = new List<Point>();
@@ -56,16 +56,16 @@ namespace SeaFight.Players
                 if (shots.Count == 0) {
                     throw new InvalidOperationException("No target");
                 }
-                var shot = shots.PickRandom(rnd);
-                return new Shot { Rival = board.Rival, Coords = shot, };
+                var shot = shots.PickRandom(m_rnd);
+                return new Shot { Victim = board.Rival, Target = shot, };
             }
             catch (InvalidOperationException x) {
                 Debug.WriteLine("{0}: {1}", this, x.Message);
-                var board = preSelectedBoards.PickRandom(rnd);
-                var unknownIdxs = GetUnknownCellsIndexes(board);
-                var idx = unknownIdxs.PickRandom(rnd);
+                var board = preSelectedBoards.PickRandom(m_rnd);
+                var unknownCellsIndexes = GetUnknownCellsIndexes(board);
+                var idx = unknownCellsIndexes.PickRandom(m_rnd);
 
-                return new Shot { Rival = board.Rival, Coords = board.ToPosition(idx), };
+                return new Shot { Attacker = this, Victim = board.Rival, Target = board.ToPosition(idx), };
             }
         }
 
@@ -85,7 +85,7 @@ namespace SeaFight.Players
             if (board == null) return;
 
             if (hit.Effect == ShotEffect.Kill) {
-                var fig = new Figure(board.FindSolid(hit.Coords, CELL_KILL, CELL_HIT));
+                var fig = new Figure(board.FindSolid(hit.Target, CELL_KILL, CELL_HIT));
                 foreach (var pos in fig.Blocks) {
                     board.Set(pos, CELL_KILL);
                 }
@@ -96,7 +96,7 @@ namespace SeaFight.Players
             }
 
             if (hit.Effect == ShotEffect.Hit) {
-                var fig = new Figure(board.FindSolid(hit.Coords, CELL_HIT));
+                var fig = new Figure(board.FindSolid(hit.Target, CELL_HIT));
 
                 var rowPlaced = fig.IsRowOriented();
                 var colPlaced = fig.IsColumnOriented();

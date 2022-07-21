@@ -1,11 +1,9 @@
-﻿using SeaFight.Players;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-
-namespace SeaFight
+namespace SeaFight.Players
 {
     abstract class Player: ICompetitor
     {
@@ -47,14 +45,14 @@ namespace SeaFight
 
 
         protected HitBoard SaveHit(IEnumerable<HitBoard> boards, Hit hit) {
-            if (hit.Target.Equals(this)) return null;
+            if (hit.Victim.Equals(this)) return null;
 
             HitBoard selectedBoard = null;
 
             if ((m_features.HasFlag(AiFeatures.RememberOwnShots) && hit.Attacker.Equals(this)) ||
                 (m_features.HasFlag(AiFeatures.RememberRivalShots) && !hit.Attacker.Equals(this))) {
-                selectedBoard = boards.First(b => b.Owner.Equals(this) && b.Rival.Equals(hit.Target));
-                selectedBoard.Set(hit.Coords, HitValues[(int)hit.Effect]);
+                selectedBoard = boards.First(b => b.Owner.Equals(this) && b.Rival.Equals(hit.Victim));
+                selectedBoard.Set(hit.Target, HitValues[(int)hit.Effect]);
             }
 
             return selectedBoard;
@@ -74,7 +72,7 @@ namespace SeaFight
         public override string ToString() { return $"Player #{Id:d}"; }
 
 
-        public abstract Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board);
+        public abstract Fleet PlaceFleet(FleetLayout layout, Board.Board board);
 
 
         public abstract Shot Shoot(IEnumerable<HitBoard> boards);

@@ -62,11 +62,11 @@
     <Compile Include="Board\Hit.cs" />
     <Compile Include="Board\HitBoard.cs" />
     <Compile Include="IBlueprint.cs" />
-    <Compile Include="ICompetitor.cs" />
-    <Compile Include="IIdentifiableCompetitor.cs" />
+    <Compile Include="Players\ICompetitor.cs" />
+    <Compile Include="Players\IIdentifiableCompetitor.cs" />
     <Compile Include="ITarget.cs" />
     <Compile Include="Orientation.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Players\Player.cs" />
     <Compile Include="Players\AiFeatures.cs" />
     <Compile Include="Players\IHaveSkill.cs" />
     <Compile Include="Players\Noob.cs" />

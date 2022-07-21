@@ -45,9 +45,9 @@ namespace SeaFight.Board
         public void Set(Point cell, TElem value) { Cells[ToPlain(cell)] = value; }
 
 
-        public void ResetBoard(TElem newValue) {
+        public void ResetBoard(TElem withValue) {
             for (var idx = 0; idx < Size; idx++) {
-                Cells[idx] = newValue;
+                Cells[idx] = withValue;
             }
         }
 

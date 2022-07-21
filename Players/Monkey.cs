@@ -27,7 +27,7 @@ namespace SeaFight.Players
         public override Shot Shoot(IEnumerable<HitBoard> boards) {
             var bs = boards.ToArray();
             var board = bs[m_rnd.Next() % bs.Length];
-            return new Shot { Rival = board.Rival, Coords = new Point(m_rnd.Next() % board.XDim, m_rnd.Next() % board.YDim) };
+            return new Shot { Victim = board.Rival, Target = new Point(m_rnd.Next() % board.XDim, m_rnd.Next() % board.YDim) };
         }
 
 

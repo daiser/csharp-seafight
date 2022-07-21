@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using SeaFight.Armada;
 using SeaFight.Board;
+using SeaFight.Players;
 
 namespace SeaFight
 {
     class Game
     {
-        public int Dim { get; private set; }
+        private int Dim { get; }
 
-        public FleetLayout Armada { get; private set; }
+        private FleetLayout Armada { get; }
 
         private readonly List<ICompetitor> m_players = new List<ICompetitor>();
         private readonly List<HitBoard> m_hitBoards = new List<HitBoard>();
-        private readonly Dictionary<int, Armada.Fleet> m_fleets = new Dictionary<int, Armada.Fleet>();
+        private readonly Dictionary<int, Fleet> m_fleets = new Dictionary<int, Fleet>();
 
 
         public Game(int dim, FleetLayout fleetLayout) {
@@ -47,8 +49,8 @@ namespace SeaFight
                 }
             }
 
-            List<ICompetitor> kia = new List<ICompetitor>();
-            int totalShots = 0;
+            var kia = new List<ICompetitor>();
+            var totalShots = 0;
             while (true) // Infinite game loop
             {
                 foreach (var activePlayer in m_players) {
@@ -60,10 +62,10 @@ namespace SeaFight
                         }
 
                         var shot = activePlayer.Shoot(availableHitBoards);
-                        var rivalsFleet = m_fleets[shot.Rival.Id];
-                        var effect = rivalsFleet.TakeShot(shot.Coords);
+                        var rivalsFleet = m_fleets[shot.Victim.Id];
+                        var effect = rivalsFleet.TakeShot(shot.Target);
                         var hit = new Hit {
-                            Attacker = activePlayer, Target = shot.Rival, Coords = shot.Coords, Effect = effect,
+                            Attacker = activePlayer, Victim = shot.Victim, Target = shot.Target, Effect = effect,
                         };
                         Debug.WriteLine(hit);
                         //if (effect != ShotEffect.Miss)
@@ -71,7 +73,7 @@ namespace SeaFight
                         totalShots++;
                         //Console.ReadKey();
                         if (visualize) {
-                            System.Threading.Thread.Sleep(100);
+                            Thread.Sleep(100);
                             DisplayHit(hit);
                         }
                         foreach (var player in m_players) {
@@ -79,8 +81,8 @@ namespace SeaFight
                             player.UpdateHits(hitboard, hit);
                         }
                         if (effect == ShotEffect.Kill && !rivalsFleet.IsAlive()) {
-                            kia.Add(shot.Rival);
-                            Debug.WriteLine("{0}: GG", hit.Target);
+                            kia.Add(shot.Victim);
+                            Debug.WriteLine("{0}: GG", hit.Victim);
                         }
                         if (effect == ShotEffect.Miss) break;
                     }
@@ -95,11 +97,11 @@ namespace SeaFight
 
 
         private void DisplayHit(Hit hit) {
-            var offset = hit.Target.Id - 1;
+            var offset = hit.Victim.Id - 1;
             var top = 0;
             var left = offset * (Dim + 5);
 
-            Console.SetCursorPosition(left + hit.Coords.Col, top + hit.Coords.Row);
+            Console.SetCursorPosition(left + hit.Target.Col, top + hit.Target.Row);
             switch (hit.Effect) {
                 case ShotEffect.Hit:
                     Console.Write(HIT);
@@ -107,6 +109,7 @@ namespace SeaFight
                 case ShotEffect.Kill:
                     Console.Write(KILL);
                     break;
+                case ShotEffect.Miss:
                 default:
                     Console.Write(MISS);
                     break;

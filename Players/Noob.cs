@@ -28,7 +28,7 @@ namespace SeaFight.Players
             var unknownCellsIndexes = GetUnknownCellsIndexes(board);
             var idx = unknownCellsIndexes.PickRandom(m_rnd);
 
-            return new Shot { Rival = board.Rival, Coords = board.ToPosition(idx), };
+            return new Shot { Victim = board.Rival, Target = board.ToPosition(idx), };
         }
 
 

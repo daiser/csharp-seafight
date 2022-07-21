@@ -52,6 +52,7 @@
     <Compile Include="TestBoardOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestPoint.cs" />
+    <Compile Include="TestSquareBoardOf.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

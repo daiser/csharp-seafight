@@ -13,7 +13,7 @@ namespace SeaFight
 
 
         public Figure(IEnumerable<Point> blocks) {
-            if (blocks == null) throw new ArgumentNullException("blocks");
+            if (blocks == null) throw new ArgumentNullException(nameof(blocks));
             this.Blocks = blocks.ToArray();
         }
 

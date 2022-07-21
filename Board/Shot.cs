@@ -1,8 +1,11 @@
-﻿namespace SeaFight.Board
+﻿using SeaFight.Players;
+
+namespace SeaFight.Board
 {
     struct Shot
     {
-        public ICompetitor Rival;
-        public Point Coords;
+        public ICompetitor Attacker;
+        public ICompetitor Victim;
+        public Point Target;
     }
 }

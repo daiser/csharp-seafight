@@ -1,15 +1,15 @@
-﻿namespace SeaFight.Board
+﻿using SeaFight.Players;
+
+namespace SeaFight.Board
 {
     struct Hit
     {
         public IIdentifiableCompetitor Attacker;
-        public IIdentifiableCompetitor Target;
-        public Point Coords;
+        public IIdentifiableCompetitor Victim;
+        public Point Target;
         public ShotEffect Effect;
 
-        public override string ToString()
-        {
-            return $"{Attacker} -> {Target} @ {Coords} = {Effect}";
-        }
+
+        public override string ToString() { return $"{Attacker} -> {Victim} @ {Target} = {Effect}"; }
     }
 }

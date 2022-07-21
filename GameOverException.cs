@@ -1,4 +1,5 @@
 ﻿using System;
+using SeaFight.Players;
 
 namespace SeaFight
 {
