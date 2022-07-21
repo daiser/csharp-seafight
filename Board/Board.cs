@@ -5,7 +5,7 @@ using SeaFight.Armada;
 
 namespace SeaFight.Board
 {
-    class Board: BoardOf<byte>
+    class Board: SquareBoardOf<byte>
     {
         public const byte CELL_FREE = 0;
         public const byte CELL_SHIP = 1;
@@ -40,15 +40,15 @@ namespace SeaFight.Board
 
 
         public void Reset() {
-            for (var i = 0; i < Size; i++) cells[i] = CELL_FREE;
+            for (var i = 0; i < Size; i++) Cells[i] = CELL_FREE;
         }
 
 
         public Pos[] PlaceShipRandom(in int shipSize, in Random generator = null) {
             var gen = generator ?? new Random();
             var placements = new List<Placement>();
-            for (var row = 0; row < Dim; row++) {
-                for (var col = 0; col < Dim; col++) {
+            for (var row = 0; row < XDim; row++) {
+                for (var col = 0; col < YDim; col++) {
                     var cell = new Pos(col, row);
                     var colPlacement = cell.MakeColumn(shipSize);
                     var rowPlacement = cell.MakeRow(shipSize);
@@ -91,10 +91,10 @@ namespace SeaFight.Board
 
 
         private void Iterate(in ForEachCellCallback forEachCell, in ForEachRowCallback forEachRow = null) {
-            for (var row = 0; row < Dim; row++) {
+            for (var row = 0; row < XDim; row++) {
                 forEachRow?.Invoke(row);
-                for (var col = 0; col < Dim; col++) {
-                    forEachCell(col, row, ref cells[row * Dim + col]);
+                for (var col = 0; col < YDim; col++) {
+                    forEachCell(col, row, ref Cells[row * YDim + col]);
                 }
             }
         }

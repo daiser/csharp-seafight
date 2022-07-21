@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board\Cell.cs" />
+    <Compile Include="Board\SquareBoardOf.cs" />
     <Compile Include="Ext.cs" />
     <Compile Include="Figure.cs" />
     <Compile Include="Armada\Fleet.cs" />

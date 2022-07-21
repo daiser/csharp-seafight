@@ -2,7 +2,7 @@
 
 namespace SeaFight
 {
-    class Scores : BoardOf<float>
+    class Scores : SquareBoardOf<float>
     {
         public Scores(int dim) : base(dim) { }
     }
