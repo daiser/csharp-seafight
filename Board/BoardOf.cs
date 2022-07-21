@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SeaFight.Board
 {
-    class BoardOf<TElem>
+    public class BoardOf<TElem>
     {
         public TElem[] Cells { get; }
 

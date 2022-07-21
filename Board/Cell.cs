@@ -2,7 +2,7 @@
 
 namespace SeaFight.Board
 {
-    class Cell<TValue>: Pos
+    public class Cell<TValue>: Pos
     {
         private const string NULL_VALUE = "<null>";
 

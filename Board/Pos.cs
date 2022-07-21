@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SeaFight.Board
 {
-    class Pos
+    public class Pos
     {
         public readonly int Col;
         public readonly int Row;

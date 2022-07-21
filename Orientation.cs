@@ -1,6 +1,6 @@
 ﻿namespace SeaFight
 {
-    enum Orientation
+    public enum Orientation
     {
         Row = 0,
         Column = 1,
