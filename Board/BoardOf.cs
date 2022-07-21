@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SeaFight
+namespace SeaFight.Board
 {
     class BoardOf<TElem>
     {

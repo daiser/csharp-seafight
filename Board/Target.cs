@@ -1,4 +1,4 @@
-﻿namespace SeaFight
+﻿namespace SeaFight.Board
 {
     class Target: Cell<bool>
     {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SeaFight.Armada;
+using SeaFight.Board;
 
 namespace SeaFight.Players
 {
@@ -18,7 +20,7 @@ namespace SeaFight.Players
         public override string ToString() { return $"Noob #{Id:d}"; }
 
 
-        public override Fleet PlaceFleet(FleetLayout layout, Board board) { return board.PlaceFleet(layout, m_rnd); }
+        public override Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, m_rnd); }
 
 
         public override Shot Shoot(IEnumerable<HitBoard> boards) {

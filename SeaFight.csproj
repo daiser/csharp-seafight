@@ -46,20 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cell.cs" />
+    <Compile Include="Board\Cell.cs" />
     <Compile Include="Ext.cs" />
     <Compile Include="Figure.cs" />
-    <Compile Include="Fleet.cs" />
-    <Compile Include="FleetLayout.cs" />
-    <Compile Include="Board.cs" />
-    <Compile Include="BoardOf.cs" />
+    <Compile Include="Armada\Fleet.cs" />
+    <Compile Include="Armada\FleetLayout.cs" />
+    <Compile Include="Board\Board.cs" />
+    <Compile Include="Board\BoardOf.cs" />
     <Compile Include="GameOverException.cs" />
     <Compile Include="Players\Amateur.cs" />
     <Compile Include="Players\Pro.cs" />
-    <Compile Include="Pos.cs" />
+    <Compile Include="Board\Pos.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Hit.cs" />
-    <Compile Include="HitBoard.cs" />
+    <Compile Include="Board\Hit.cs" />
+    <Compile Include="Board\HitBoard.cs" />
     <Compile Include="IBlueprint.cs" />
     <Compile Include="ICompetitor.cs" />
     <Compile Include="IIdentifiableCompetitor.cs" />
@@ -74,16 +74,17 @@
     <Compile Include="Players\Skill.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Division.cs" />
-    <Compile Include="ShipBlueprint.cs" />
+    <Compile Include="Armada\Division.cs" />
+    <Compile Include="Armada\ShipBlueprint.cs" />
     <Compile Include="Scores.cs" />
-    <Compile Include="Ship.cs" />
-    <Compile Include="Shot.cs" />
-    <Compile Include="ShotEffect.cs" />
-    <Compile Include="Target.cs" />
+    <Compile Include="Armada\Ship.cs" />
+    <Compile Include="Board\Shot.cs" />
+    <Compile Include="Board\ShotEffect.cs" />
+    <Compile Include="Board\Target.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

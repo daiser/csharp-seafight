@@ -2,36 +2,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SeaFight.Board;
 
-namespace SeaFight
+namespace SeaFight.Armada
 {
     class Ship: IReadOnlyList<Target>, IBlueprint, ITarget
     {
-        private readonly List<Target> cells;
+        private readonly List<Target> m_cells;
 
-        public Pos Location { get; private set; }
+        public Pos Location { get; }
 
-        public int Size => cells.Count;
+        public int Size => m_cells.Count;
 
-        public int Count => cells.Count;
+        public int Count => m_cells.Count;
 
         public Target this[int index]
         {
-            get => cells[index];
-            private set => cells[index] = value;
+            get => m_cells[index];
+            private set => m_cells[index] = value;
         }
 
 
         public Ship(IEnumerable<Pos> placement) {
-            cells = placement.Select(e => new Target(e.Col, e.Row)).ToList();
+            m_cells = placement.Select(e => new Target(e.Col, e.Row)).ToList();
             if (Count < 1) throw new ArgumentException("Empty ship", nameof(placement));
-            Location = placement.First();
+            Location = m_cells[0];
         }
 
 
         private int IndexOf(Pos cell) {
             for (int i = 0; i < Count; i++) {
-                if (cells[i].Equals(cell)) return i;
+                if (m_cells[i].Equals(cell)) return i;
             }
             return -1;
         }
@@ -45,9 +46,9 @@ namespace SeaFight
         }
 
 
-        public IEnumerator<Target> GetEnumerator() { return cells.GetEnumerator(); }
+        public IEnumerator<Target> GetEnumerator() { return m_cells.GetEnumerator(); }
 
 
-        IEnumerator IEnumerable.GetEnumerator() { return cells.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return m_cells.GetEnumerator(); }
     }
 }

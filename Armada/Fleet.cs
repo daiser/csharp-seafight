@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SeaFight.Board;
 
-namespace SeaFight
+namespace SeaFight.Armada
 {
     class Fleet: List<Ship>, ITarget
     {

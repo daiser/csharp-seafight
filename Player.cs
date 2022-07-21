@@ -1,6 +1,8 @@
 ﻿using SeaFight.Players;
 using System.Collections.Generic;
 using System.Linq;
+using SeaFight.Armada;
+using SeaFight.Board;
 
 
 namespace SeaFight
@@ -72,7 +74,7 @@ namespace SeaFight
         public override string ToString() { return $"Player #{Id:d}"; }
 
 
-        public abstract Fleet PlaceFleet(FleetLayout layout, Board board);
+        public abstract Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board);
 
 
         public abstract Shot Shoot(IEnumerable<HitBoard> boards);

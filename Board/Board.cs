@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SeaFight.Armada;
 
-namespace SeaFight
+namespace SeaFight.Board
 {
     class Board: BoardOf<byte>
     {
@@ -63,8 +64,8 @@ namespace SeaFight
         }
 
 
-        public Fleet PlaceFleet(in FleetLayout layout, in Random generator = null) {
-            var fleet = new Fleet();
+        public Armada.Fleet PlaceFleet(in FleetLayout layout, in Random generator = null) {
+            var fleet = new Armada.Fleet();
             foreach (var division in layout.Content) {
                 int remain = division.NumberOfShips;
                 while (remain > 0) {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SeaFight.Armada;
+using SeaFight.Board;
 
 namespace SeaFight.Players
 {
@@ -22,7 +24,7 @@ namespace SeaFight.Players
         }
 
 
-        public override Fleet PlaceFleet(FleetLayout layout, Board board) { return board.PlaceFleet(layout, rnd); }
+        public override Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, rnd); }
 
 
         public override string ToString() { return $"Amateur #{Id:d}"; }

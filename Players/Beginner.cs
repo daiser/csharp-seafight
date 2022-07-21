@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeaFight.Armada;
+using SeaFight.Board;
 
 namespace SeaFight.Players
 {
@@ -25,7 +27,7 @@ namespace SeaFight.Players
         public override string ToString() { return string.Format("Beginner #{0:d}", Id); }
 
 
-        public override Fleet PlaceFleet(FleetLayout layout, Board board) { return board.PlaceFleet(layout, rnd); }
+        public override Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, rnd); }
 
 
         public override Shot Shoot(IEnumerable<HitBoard> boards) {
