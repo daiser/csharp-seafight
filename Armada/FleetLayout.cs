@@ -12,14 +12,14 @@ namespace SeaFight.Armada
             var groups = new List<Division>();
 
             for (var size = maxSize; size > 0; size--) {
-                groups.Add(new Division(new ShipBlueprint(size), maxSize - size + 1));
+                groups.Add(new Division(size, maxSize - size + 1));
             }
 
             return new FleetLayout(groups);
         }
 
 
-        public Division[] Content { get; private set; }
+        public Division[] Content { get; }
 
 
         public FleetLayout(params Division[] protos) { Content = protos.ToArray(); }

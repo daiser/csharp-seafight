@@ -27,8 +27,8 @@ namespace SeaFight.Board
         }
 
 
-        public Pos[] PlaceShip(in Pos at, in ShipBlueprint proto, in Orientation orientation) {
-            var placement = at.Make(orientation, proto.Size);
+        public Pos[] PlaceShip(in Pos at, in int shipSize, in Orientation orientation) {
+            var placement = at.Make(orientation, shipSize);
 
             if (!CheckPlacement(placement)) return null;
 
@@ -44,14 +44,14 @@ namespace SeaFight.Board
         }
 
 
-        public Pos[] PlaceShipRandom(in ShipBlueprint proto, in Random generator = null) {
+        public Pos[] PlaceShipRandom(in int shipSize, in Random generator = null) {
             var gen = generator ?? new Random();
             var placements = new List<Placement>();
             for (var row = 0; row < Dim; row++) {
                 for (var col = 0; col < Dim; col++) {
                     var cell = new Pos(col, row);
-                    var colPlacement = cell.MakeColumn(proto.Size);
-                    var rowPlacement = cell.MakeRow(proto.Size);
+                    var colPlacement = cell.MakeColumn(shipSize);
+                    var rowPlacement = cell.MakeRow(shipSize);
 
                     if (CheckPlacement(colPlacement)) placements.Add(new Placement { Cell = cell, Orientation = Orientation.Column });
                     if (CheckPlacement(rowPlacement)) placements.Add(new Placement { Cell = cell, Orientation = Orientation.Row });
@@ -60,16 +60,16 @@ namespace SeaFight.Board
 
             if (placements.Count == 0) return null;
             var placement = placements[gen.Next() % placements.Count];
-            return PlaceShip(placement.Cell, proto, placement.Orientation);
+            return PlaceShip(placement.Cell, shipSize, placement.Orientation);
         }
 
 
-        public Armada.Fleet PlaceFleet(in FleetLayout layout, in Random generator = null) {
-            var fleet = new Armada.Fleet();
+        public Fleet PlaceFleet(in FleetLayout layout, in Random generator = null) {
+            var fleet = new Fleet();
             foreach (var division in layout.Content) {
                 int remain = division.NumberOfShips;
                 while (remain > 0) {
-                    var placement = PlaceShipRandom(division.Proto, generator);
+                    var placement = PlaceShipRandom(division.ShipSize, generator);
                     if (placement == null) return null;
                     fleet.Add(new Ship(placement));
                     remain--;
