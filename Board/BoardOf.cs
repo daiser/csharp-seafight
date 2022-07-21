@@ -24,25 +24,25 @@ namespace SeaFight.Board
         protected int ToPlain(int col, int row) { return row * YDim + col; }
 
 
-        protected int ToPlain(Pos cell) { return cell.Plain(YDim); }
+        protected int ToPlain(Point cell) { return ToPlain(cell.Col, cell.Row); }
 
 
-        public Pos ToPosition(int idx) { return new Pos(idx % YDim, idx / YDim); }
+        public Point ToPosition(int idx) { return new Point(idx % YDim, idx / YDim); }
 
 
         public TElem At(int col, int row) { return Cells[ToPlain(col, row)]; }
 
 
-        public TElem At(Pos cell) { return Cells[ToPlain(cell)]; }
+        public TElem At(Point cell) { return Cells[ToPlain(cell)]; }
 
 
-        public bool Contains(Pos cell) { return cell.Col < YDim && cell.Row < XDim && cell.Col >= 0 && cell.Row >= 0; }
+        public bool Contains(Point cell) { return cell.Col < YDim && cell.Row < XDim && cell.Col >= 0 && cell.Row >= 0; }
 
 
         public void Set(int col, int row, TElem value) { Cells[ToPlain(col, row)] = value; }
 
 
-        public void Set(Pos cell, TElem value) { Cells[ToPlain(cell)] = value; }
+        public void Set(Point cell, TElem value) { Cells[ToPlain(cell)] = value; }
 
 
         public void ResetBoard(TElem newValue) {
@@ -52,7 +52,7 @@ namespace SeaFight.Board
         }
 
 
-        public Cell<TElem>[] FindSolid(Pos start, params TElem[] values) {
+        public Cell<TElem>[] FindSolid(Point start, params TElem[] values) {
             var cells = new List<Cell<TElem>>();
 
             var cellVal = At(start);

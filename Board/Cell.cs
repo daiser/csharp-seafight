@@ -2,7 +2,7 @@
 
 namespace SeaFight.Board
 {
-    public class Cell<TValue>: Pos
+    public class Cell<TValue>: Point
     {
         private const string NULL_VALUE = "<null>";
 
@@ -24,8 +24,8 @@ namespace SeaFight.Board
         }
 
 
-        public Cell(Pos pos, TValue value): base(pos.Col, pos.Row) {
-            if (pos == null) throw new ArgumentNullException(nameof(pos));
+        public Cell(Point point, TValue value): base(point.Col, point.Row) {
+            if (point == null) throw new ArgumentNullException(nameof(point));
             Value = value;
         }
 
@@ -33,7 +33,7 @@ namespace SeaFight.Board
         public override bool Equals(object obj) {
             var result = false;
             var cell = obj as Cell<TValue>;
-            if (obj is Pos pos) result = base.Equals(pos);
+            if (obj is Point pos) result = base.Equals(pos);
             if (cell != null) result = result && Value != null && Value.Equals(cell.Value);
             return result;
         }

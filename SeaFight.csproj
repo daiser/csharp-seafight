@@ -57,7 +57,7 @@
     <Compile Include="GameOverException.cs" />
     <Compile Include="Players\Amateur.cs" />
     <Compile Include="Players\Pro.cs" />
-    <Compile Include="Board\Pos.cs" />
+    <Compile Include="Board\Point.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Board\Hit.cs" />
     <Compile Include="Board\HitBoard.cs" />

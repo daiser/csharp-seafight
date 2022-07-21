@@ -7,23 +7,23 @@ namespace SeaFight
 {
     class Figure
     {
-        public Pos[] Blocks { get; }
+        public Point[] Blocks { get; }
 
         public int Area => Blocks.Length;
 
 
-        public Figure(IEnumerable<Pos> blocks) {
+        public Figure(IEnumerable<Point> blocks) {
             if (blocks == null) throw new ArgumentNullException("blocks");
             this.Blocks = blocks.ToArray();
         }
 
 
-        public Pos[] Neighbours() {
+        public Point[] Neighbours() {
             return (from block in Blocks from neighbour in block.Neighbours() where !Blocks.Contains(neighbour) select neighbour).ToArray();
         }
 
 
-        public bool Contains(Pos pos) { return Blocks.Contains(pos); }
+        public bool Contains(Point point) { return Blocks.Contains(point); }
 
 
         public bool IsColumnOriented() {

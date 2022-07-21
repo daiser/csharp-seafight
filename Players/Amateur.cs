@@ -9,10 +9,10 @@ namespace SeaFight.Players
 {
     class Amateur: Player, IHaveSkill
     {
-        private static readonly Pos s_stepUp = new Pos(0, -1);
-        private static readonly Pos s_stepDown = new Pos(0, 1);
-        private static readonly Pos s_stepLeft = new Pos(-1, 0);
-        private static readonly Pos s_stepRight = new Pos(1, 0);
+        private static readonly Point s_stepUp = new Point(0, -1);
+        private static readonly Point s_stepDown = new Point(0, 1);
+        private static readonly Point s_stepLeft = new Point(-1, 0);
+        private static readonly Point s_stepRight = new Point(1, 0);
 
         public Skill Skill => Skill.Amature;
 
@@ -39,16 +39,16 @@ namespace SeaFight.Players
                 var target = board.ToPosition(hits.PickRandom(rnd));
                 var fig = new Figure(board.FindSolid(target, CELL_HIT));
 
-                var shots = new List<Pos>();
+                var shots = new List<Point>();
                 if (fig.IsRowOriented()) {
-                    var left = new Pos(fig.Left() - 1, target.Row);
-                    var right = new Pos(fig.Right() + 1, target.Row);
+                    var left = new Point(fig.Left() - 1, target.Row);
+                    var right = new Point(fig.Right() + 1, target.Row);
                     shots.AddIf(left, board.Contains(left) && board.At(left) == CELL_UNKNOWN);
                     shots.AddIf(right, board.Contains(right) && board.At(right) == CELL_UNKNOWN);
                 }
                 if (fig.IsColumnOriented()) {
-                    var top = new Pos(target.Col, fig.Top() - 1);
-                    var bottom = new Pos(target.Col, fig.Bottom() + 1);
+                    var top = new Point(target.Col, fig.Top() - 1);
+                    var bottom = new Point(target.Col, fig.Bottom() + 1);
                     shots.AddIf(top, board.Contains(top) && board.At(top) == CELL_UNKNOWN);
                     shots.AddIf(bottom, board.Contains(bottom) && board.At(bottom) == CELL_UNKNOWN);
                 }
@@ -70,7 +70,7 @@ namespace SeaFight.Players
         }
 
 
-        private static void SetMisses(HitBoard board, Figure figure, params Pos[] offsets) {
+        private static void SetMisses(HitBoard board, Figure figure, params Point[] offsets) {
             foreach (var pos in figure.Blocks) {
                 foreach (var offset in offsets) {
                     var offPos = pos.Add(offset);

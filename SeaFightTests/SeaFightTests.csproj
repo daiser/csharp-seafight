@@ -50,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestBoardOf.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

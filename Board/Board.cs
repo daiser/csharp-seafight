@@ -14,7 +14,7 @@ namespace SeaFight.Board
         public Board(in int dim): base(dim) { }
 
 
-        private bool CheckPlacement(IEnumerable<Pos> places) {
+        private bool CheckPlacement(IEnumerable<Point> places) {
             foreach (var shipCell in places) {
                 if (!Contains(shipCell)) return false;
                 if (At(shipCell) != CELL_FREE) return false;
@@ -27,7 +27,7 @@ namespace SeaFight.Board
         }
 
 
-        public Pos[] PlaceShip(in Pos at, in int shipSize, in Orientation orientation) {
+        public Point[] PlaceShip(in Point at, in int shipSize, in Orientation orientation) {
             var placement = at.Make(orientation, shipSize);
 
             if (!CheckPlacement(placement)) return null;
@@ -42,12 +42,12 @@ namespace SeaFight.Board
         public void Reset() { ResetBoard(CELL_FREE); }
 
 
-        public Pos[] PlaceShipRandom(in int shipSize, in Random generator = null) {
+        public Point[] PlaceShipRandom(in int shipSize, in Random generator = null) {
             var gen = generator ?? new Random();
             var placements = new List<Placement>();
             for (var row = 0; row < XDim; row++) {
                 for (var col = 0; col < YDim; col++) {
-                    var cell = new Pos(col, row);
+                    var cell = new Point(col, row);
                     var colPlacement = cell.MakeColumn(shipSize);
                     var rowPlacement = cell.MakeRow(shipSize);
 
@@ -100,7 +100,7 @@ namespace SeaFight.Board
 
         private struct Placement
         {
-            public Pos Cell;
+            public Point Cell;
             public Orientation Orientation;
         }
     }

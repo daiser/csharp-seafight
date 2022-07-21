@@ -4,7 +4,7 @@
     {
         public IIdentifiableCompetitor Attacker;
         public IIdentifiableCompetitor Target;
-        public Pos Coords;
+        public Point Coords;
         public ShotEffect Effect;
 
         public override string ToString()

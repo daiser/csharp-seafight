@@ -16,5 +16,14 @@ namespace SeaFightTests
             Assert.AreEqual(15, board.Cells.Length);
             Assert.IsTrue(board.Cells.All(c => c == 0));
         }
+
+
+        [TestMethod]
+        public void ResetBoard() {
+            var board = new BoardOf<int>(2, 4);
+            Assert.IsTrue(board.Cells.All(c => c == 0));
+            board.ResetBoard(10);
+            Assert.IsTrue(board.Cells.All(c => c == 10));
+        }
     }
 }
