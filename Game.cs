@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using SeaFight.Ai;
 using SeaFight.Armada;
 using SeaFight.Board;
-using SeaFight.Players;
 
 namespace SeaFight
 {

@@ -1,4 +1,4 @@
-﻿using SeaFight.Players;
+﻿using SeaFight.Ai;
 
 namespace SeaFight.Board
 {

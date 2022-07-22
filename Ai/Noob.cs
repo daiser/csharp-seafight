@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     class Noob: Player, IHaveSkill
     {
@@ -12,7 +12,7 @@ namespace SeaFight.Players
         public Skill Skill => Skill.Noob;
 
 
-        public Noob(Random generator = null): base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots) {
+        public Noob(Random generator = null): base(Features.DontShootYourself | Features.RememberOwnShots) {
             m_rnd = generator ?? new Random();
         }
 

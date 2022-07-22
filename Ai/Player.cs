@@ -3,7 +3,7 @@ using System.Linq;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     abstract class Player: ICompetitor
     {
@@ -25,19 +25,19 @@ namespace SeaFight.Players
         }
 
 
-        private readonly AiFeatures m_features;
+        private readonly Features m_features;
 
         public int Id { get; }
 
 
-        public Player(AiFeatures features) {
+        public Player(Features features) {
             Id = GetNextId();
             m_features = features;
         }
 
 
         protected IEnumerable<HitBoard> PreSelectBoard(IEnumerable<HitBoard> boards) {
-            if (m_features.HasFlag(AiFeatures.DontShootYourself)) {
+            if (m_features.HasFlag(Features.DontShootYourself)) {
                 return boards.Where(b => !b.Rival.Equals(this));
             }
             return boards;
@@ -49,8 +49,8 @@ namespace SeaFight.Players
 
             HitBoard selectedBoard = null;
 
-            if ((m_features.HasFlag(AiFeatures.RememberOwnShots) && hit.Attacker.Equals(this)) ||
-                (m_features.HasFlag(AiFeatures.RememberRivalShots) && !hit.Attacker.Equals(this))) {
+            if ((m_features.HasFlag(Features.RememberOwnShots) && hit.Attacker.Equals(this)) ||
+                (m_features.HasFlag(Features.RememberRivalShots) && !hit.Attacker.Equals(this))) {
                 selectedBoard = boards.First(b => b.Owner.Equals(this) && b.Rival.Equals(hit.Victim));
                 selectedBoard.Set(hit.Target, HitValues[(int)hit.Effect]);
             }

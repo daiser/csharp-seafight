@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     class Beginner: Player, IHaveSkill
     {
@@ -19,7 +16,7 @@ namespace SeaFight.Players
 
 
         public Beginner(Random generator):
-            base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots) {
+            base(Features.DontShootYourself | Features.RememberOwnShots | Features.RememberRivalShots) {
             rnd = generator ?? new Random();
         }
 

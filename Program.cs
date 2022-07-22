@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SeaFight.Ai;
 using SeaFight.Armada;
-using SeaFight.Players;
 
 namespace SeaFight
 {
@@ -24,11 +24,11 @@ namespace SeaFight
             //Console.WriteLine(ship.TakeShot(new Pos(0, 1)));
             //return;
 
-            var players = new List<Player> { new Players.Amateur(generator) };
+            var players = new List<Player> { new Amateur(generator) };
             var winRate = 1.0;
 
             while (winRate > 0.5) {
-                players.Add(new Players.Beginner(generator));
+                players.Add(new Beginner(generator));
                 var amateurWins = 0;
                 for (var gameNo = 0; gameNo < GAMES_TO_PLAY; gameNo++) {
                     var game = new Game(10, FleetLayout.Classic);

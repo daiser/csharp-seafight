@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     [Flags]
-    enum AiFeatures
+    enum Features
     {
         None = 0,
         RememberOwnShots = 0x01,

@@ -1,6 +1,4 @@
-﻿using SeaFight.Board;
-
-namespace SeaFight
+﻿namespace SeaFight.Board
 {
     interface ITarget
     {

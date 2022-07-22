@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     class Monkey: Player, IHaveSkill
     {
@@ -15,7 +13,7 @@ namespace SeaFight.Players
         public Skill Skill => Skill.Monkey;
 
 
-        public Monkey(Random generator = null): base(AiFeatures.None) { m_rnd = generator ?? new Random(); }
+        public Monkey(Random generator = null): base(Features.None) { m_rnd = generator ?? new Random(); }
 
 
         public override string ToString() { return $"Monkey #{Id:d}"; }

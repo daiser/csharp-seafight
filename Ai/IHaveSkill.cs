@@ -1,4 +1,4 @@
-﻿namespace SeaFight.Players
+﻿namespace SeaFight.Ai
 {
     interface IHaveSkill
     {

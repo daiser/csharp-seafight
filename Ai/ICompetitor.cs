@@ -2,7 +2,7 @@
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     interface ICompetitor : IIdentifiableCompetitor
     {

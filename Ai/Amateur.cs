@@ -5,7 +5,7 @@ using System.Linq;
 using SeaFight.Armada;
 using SeaFight.Board;
 
-namespace SeaFight.Players
+namespace SeaFight.Ai
 {
     class Amateur: Player, IHaveSkill
     {
@@ -19,7 +19,7 @@ namespace SeaFight.Players
         private readonly Random m_rnd;
 
 
-        public Amateur(Random generator): base(AiFeatures.DontShootYourself | AiFeatures.RememberOwnShots | AiFeatures.RememberRivalShots) {
+        public Amateur(Random generator): base(Features.DontShootYourself | Features.RememberOwnShots | Features.RememberRivalShots) {
             m_rnd = generator;
         }
 
