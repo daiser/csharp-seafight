@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ShapeType.cs" />
     <Compile Include="Ships\Fleet.cs" />
     <Compile Include="Ships\Ship.cs" />
     <Compile Include="Boards\ShipBoard.cs" />

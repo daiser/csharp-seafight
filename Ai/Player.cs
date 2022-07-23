@@ -42,7 +42,7 @@ namespace SeaFight.Ai
             var shipBoard = new ShipBoard(boardSize);
 
             foreach (var shipSize in layout) {
-                var freeCells = shipBoard.GetFreePlaces(shipSize).ToArray();
+                var freeCells = shipBoard.GetFreeCells(shipSize).ToArray();
                 if (freeCells.Length == 0) throw new InvalidOperationException($"failed to place ship of size {shipSize}: no space");
 
                 var (col, row, horizontal) = freeCells.PickRandom(Rng);

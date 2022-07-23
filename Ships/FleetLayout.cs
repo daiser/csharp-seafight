@@ -16,7 +16,7 @@ namespace SeaFight.Ships
         public FleetLayout(IEnumerable<int> sizes) { m_sizes = sizes.ToArray(); }
 
 
-        public IEnumerator<int> GetEnumerator() { return (IEnumerator<int>)m_sizes.GetEnumerator(); }
+        public IEnumerator<int> GetEnumerator() { return ((IEnumerable<int>)m_sizes).GetEnumerator(); }
 
 
         IEnumerator IEnumerable.GetEnumerator() { return m_sizes.GetEnumerator(); }

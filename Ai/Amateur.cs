@@ -49,43 +49,46 @@ namespace SeaFight.Ai
             }
 
 
-            IEnumerable<(int col, int row)> FindEnds(IEnumerable<(int col, int row)> shape) {
-                var s = shape as (int col, int row)[] ?? shape.ToArray();
-                if (s.Length == 1) {
-                    var point = s[0];
-                    yield return point.Shift((0, -1)); // up
-                    yield return point.Shift((0, 1)); // down
-                    yield return point.Shift((-1, 0)); // left
-                    yield return point.Shift((1, 0)); // right
-                } else {
-                    var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
-                    var rows = s.Select(c => c.row).Distinct().OrderBy(v => v).ToArray();
+            IEnumerable<(int col, int row)> FindEnds(IEnumerable<(int col, int row)> solidShape) {
+                var s = solidShape as (int col, int row)[] ?? solidShape.ToArray();
+                var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
+                var rows = s.Select(c => c.row).Distinct().OrderBy(v => v).ToArray();
 
-                    if (cols.Length > 1 && rows.Length > 1) throw new InvalidOperationException("failed to determine shape");
-                    if (cols.Length == 1) {
-                        // Vertical
+                switch (s.DetectType()) {
+                    case ShapeType.Point:
+                        var point = s[0];
+                        yield return point.Shift((0, -1)); // up
+                        yield return point.Shift((0, 1)); // down
+                        yield return point.Shift((-1, 0)); // left
+                        yield return point.Shift((1, 0)); // right
+                        break;
+                    case ShapeType.Vertical:
                         yield return (cols[0], rows.First() - 1); // up
                         yield return (cols[0], rows.Last() + 1); // down
-                    } else {
-                        // Horizontal
+                        break;
+                    case ShapeType.Horizontal:
                         yield return (cols.First() - 1, rows[0]); // left
                         yield return (cols.Last() + 1, rows[0]); // right
-                    }
+                        break;
+                    case ShapeType.None:
+                    default:
+                        throw new InvalidOperationException("failed to determine shape");
                 }
             }
 
 
-            if (hit.Result == CellState.Hit) // Find points to shoot next
-                foreach (var end in FindEnds(hitBoard.FindSolid(hit.Target, c => c == CellState.Hit)))
+            if (hit.Result == CellState.Hit)
+                // Find points to shoot next
+                foreach (var end in FindEnds(hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit)))
                     TodoValidPoint(end);
 
             if (hit.Result == CellState.Kill) {
                 todo.Clear();
                 // Mark all cells around ship as hits.
-                var ship = hitBoard.FindSolid(hit.Target, c => c == CellState.Hit || c == CellState.Kill);
+                var ship = hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit || c == CellState.Kill);
                 foreach (var shipCell in ship) {
                     hitBoard[shipCell] = CellState.Kill;
-                    foreach (var neighbor in hitBoard.NeighborsOf(shipCell)) hitBoard[neighbor.col][neighbor.row] = CellState.Hit;
+                    foreach (var (nCol, nRow, _) in hitBoard.NeighborsOf(shipCell)) hitBoard[nCol][nRow] = CellState.Hit;
                 }
             }
         }

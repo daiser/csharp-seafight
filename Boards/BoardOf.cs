@@ -38,7 +38,7 @@ namespace SeaFight.Boards
         public bool Contains((int col, int row) point) { return Contains(point.col, point.row); }
 
 
-        public IEnumerable<(int col, int row)> FindSolid((int col, int row) start, CellSelector selector) {
+        public IEnumerable<(int col, int row)> FindSolidShape((int col, int row) start, CellSelector selector) {
             if (!selector(this[start])) yield break;
 
             yield return start;
