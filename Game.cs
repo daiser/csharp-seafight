@@ -11,11 +11,7 @@ namespace SeaFight
 {
     internal class Game
     {
-        private const string HIT = "H";
-        private const string KILL = "K";
-        private const string MISS = "-";
         private readonly Dictionary<int, Fleet> m_fleets = new Dictionary<int, Fleet>();
-
         private readonly Dictionary<int, Player> m_players = new Dictionary<int, Player>();
 
 
@@ -57,18 +53,20 @@ namespace SeaFight
                         Debug.WriteLine(hit);
                         totalShots++;
                         foreach (var player in m_players.Values) player.UpdateHits(hit);
-                        if (visualize)
-                        {
+
+                        if (visualize) {
                             Thread.Sleep(50);
-                            activePlayer.Value.PrintHitBoard(shot.Victim, shot.Victim.Id * Dim + 5, activePlayer.Key * Dim + 5, ReprCell);
+                            activePlayer.Value.PrintHitBoard(shot.Victim,
+                                shot.Victim.Id * Dim + 5,
+                                activePlayer.Key * Dim + 5,
+                                CellToString);
                         }
-                        if (hit.Result == CellState.Kill) {
-                            if (hit.Result == CellState.Kill && !rivalsFleet.IsAlive)
-                            {
+
+                        if (hit.Result == CellState.Kill)
+                            if (hit.Result == CellState.Kill && !rivalsFleet.IsAlive) {
                                 alive.Remove(hit.Victim.Id);
                                 Debug.WriteLine("{0}: GG", hit.Victim);
                             }
-                        }
                         if (hit.Result == CellState.Miss) break;
                     }
         }
@@ -77,7 +75,7 @@ namespace SeaFight
         public void RegisterPlayer(Player player) { m_players[player.Id] = player; }
 
 
-        private string ReprCell(CellState state) {
+        private static string CellToString(CellState state) {
             switch (state) {
                 case CellState.Hit:
                     return "*";

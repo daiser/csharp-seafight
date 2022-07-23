@@ -7,19 +7,17 @@ namespace SeaFight
 {
     public static class Ext
     {
-
-
-        public static ShapeType DetectType(this IEnumerable<(int col, int row)> shape) {
+        public static Shape DetectShape(this IEnumerable<(int col, int row)> shape) {
             var s = shape as (int col, int row)[] ?? shape.ToArray();
 
             var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
             var rows = s.Select(c => c.row).Distinct().OrderBy(v => v).ToArray();
 
-            if (cols.Length == 1 && rows.Length == 1) return ShapeType.Point;
-            if (cols.Length > 1 && rows.Length > 1) return ShapeType.None;
+            if (cols.Length == 1 && rows.Length == 1) return Shape.Point;
+            if (cols.Length > 1 && rows.Length > 1) return Shape.None;
 
-            if (cols.Length == 1) return ShapeType.Vertical;
-            return ShapeType.Horizontal;
+            if (cols.Length == 1) return Shape.Vertical;
+            return Shape.Horizontal;
         }
 
 

@@ -54,23 +54,23 @@ namespace SeaFight.Ai
                 var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
                 var rows = s.Select(c => c.row).Distinct().OrderBy(v => v).ToArray();
 
-                switch (s.DetectType()) {
-                    case ShapeType.Point:
+                switch (s.DetectShape()) {
+                    case Shape.Point:
                         var point = s[0];
                         yield return point.Shift((0, -1)); // up
                         yield return point.Shift((0, 1)); // down
                         yield return point.Shift((-1, 0)); // left
                         yield return point.Shift((1, 0)); // right
                         break;
-                    case ShapeType.Vertical:
+                    case Shape.Vertical:
                         yield return (cols[0], rows.First() - 1); // up
                         yield return (cols[0], rows.Last() + 1); // down
                         break;
-                    case ShapeType.Horizontal:
+                    case Shape.Horizontal:
                         yield return (cols.First() - 1, rows[0]); // left
                         yield return (cols.Last() + 1, rows[0]); // right
                         break;
-                    case ShapeType.None:
+                    case Shape.None:
                     default:
                         throw new InvalidOperationException("failed to determine shape");
                 }
