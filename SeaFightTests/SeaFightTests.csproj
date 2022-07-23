@@ -49,8 +49,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FleetTest.cs" />
+    <Compile Include="ShipTest.cs" />
     <Compile Include="TestBoardOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestShipBoard.cs" />
     <Compile Include="TestSquareBoardOf.cs" />
   </ItemGroup>
   <ItemGroup>

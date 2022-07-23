@@ -28,10 +28,9 @@ namespace SeaFight.Ships
 
 
         public CellState TakeShot(Shot shot) {
-            foreach (var cell in m_cells) {
-                var valueTuple = cell;
-                if (valueTuple.col != shot.Target.col || valueTuple.row != shot.Target.row) continue;
-                valueTuple.state = CellState.Hit;
+            for (var i = 0; i < m_cells.Length; i++) {
+                if (m_cells[i].col != shot.Target.col || m_cells[i].row != shot.Target.row) continue;
+                m_cells[i].state = CellState.Hit;
                 return IsDead ? CellState.Kill : CellState.Hit;
             }
             return CellState.Miss;
