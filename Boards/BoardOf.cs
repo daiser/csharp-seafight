@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SeaFight.Boards
 {
@@ -88,11 +89,10 @@ namespace SeaFight.Boards
 
 
         private IEnumerable<(int col, int row, TElem value)> Move((int col, int row) start, (int col, int row) unit) {
-            var cursor = start;
+            var cursor = start.Shift(unit);
             while (Contains(cursor)) {
-                if (cursor != start)
-                    yield return (cursor.col, cursor.row, this[cursor]);
-                cursor = (start.col + unit.col, start.row + unit.row);
+                yield return (cursor.col, cursor.row, this[cursor]);
+                cursor = cursor.Shift(unit);
             }
         }
 
