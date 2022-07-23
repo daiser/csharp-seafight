@@ -24,18 +24,22 @@ namespace SeaFight
             //Console.WriteLine(ship.TakeShot(new Pos(0, 1)));
             //return;
 
-            var players = new List<Player> { new Amateur(generator) };
+            var players = new List<Player> { new Amateur(generator), new Amateur(generator) };
             var winRate = 1.0;
 
             while (winRate > 0.5) {
                 players.Add(new Beginner(generator));
+                players.Add(new Monkey(generator));
+                players.Add(new Monkey(generator));
+                players.Add(new Monkey(generator));
+                players.Add(new Monkey(generator));
                 var amateurWins = 0;
                 for (var gameNo = 0; gameNo < GAMES_TO_PLAY; gameNo++) {
                     var game = new Game(10, FleetLayout.Classic);
                     foreach (var player in players) game.RegisterPlayer(player);
 
                     try {
-                        game.Play(false);
+                        game.Play(true);
                     }
                     catch (GameOverException gox) {
                         if (gox.Winner.Id == 1) amateurWins++;

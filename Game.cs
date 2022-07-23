@@ -43,8 +43,9 @@ namespace SeaFight
             var totalShots = 0;
             while (true) // Infinite game loop
                 foreach (var activePlayer in m_players)
-                    while (alive.Contains(activePlayer.Key)) {
+                    while (true) {
                         Debug.WriteLine("Active=" + activePlayer);
+                        Debug.WriteLine(alive.Count);
                         if (alive.Count == 1) throw new GameOverException(activePlayer.Value, totalShots);
 
                         var shot = activePlayer.Value.Shoot(alive.Select(id => m_players[id]));
@@ -52,19 +53,21 @@ namespace SeaFight
                         var hit = new Hit {
                             Attacker = activePlayer.Value, Victim = shot.Victim, Target = shot.Target, Result = rivalsFleet.TakeShot(shot)
                         };
+
                         Debug.WriteLine(hit);
-                        //if (effect != ShotEffect.Miss)
-                        //Console.WriteLine(hit);
                         totalShots++;
-                        //Console.ReadKey();
-                        if (visualize) {
-                            Thread.Sleep(100);
-                            DisplayHit(hit);
-                        }
                         foreach (var player in m_players.Values) player.UpdateHits(hit);
-                        if (hit.Result == CellState.Kill && !rivalsFleet.IsAlive) {
-                            alive.Remove(hit.Victim.Id);
-                            Debug.WriteLine("{0}: GG", hit.Victim);
+                        if (visualize)
+                        {
+                            Thread.Sleep(50);
+                            activePlayer.Value.PrintHitBoard(shot.Victim, shot.Victim.Id * Dim + 5, activePlayer.Key * Dim + 5, ReprCell);
+                        }
+                        if (hit.Result == CellState.Kill) {
+                            if (hit.Result == CellState.Kill && !rivalsFleet.IsAlive)
+                            {
+                                alive.Remove(hit.Victim.Id);
+                                Debug.WriteLine("{0}: GG", hit.Victim);
+                            }
                         }
                         if (hit.Result == CellState.Miss) break;
                     }
@@ -74,23 +77,17 @@ namespace SeaFight
         public void RegisterPlayer(Player player) { m_players[player.Id] = player; }
 
 
-        private void DisplayHit(Hit hit) {
-            var offset = hit.Victim.Id - 1;
-            var top = 0;
-            var left = offset * (Dim + 5);
-
-            Console.SetCursorPosition(left + hit.Target.col, top + hit.Target.row);
-            switch (hit.Result) {
+        private string ReprCell(CellState state) {
+            switch (state) {
                 case CellState.Hit:
-                    Console.Write(HIT);
-                    break;
+                    return "*";
                 case CellState.Kill:
-                    Console.Write(KILL);
-                    break;
+                    return "X";
                 case CellState.Miss:
+                    return "-";
+                case CellState.None:
                 default:
-                    Console.Write(MISS);
-                    break;
+                    return " ";
             }
         }
     }

@@ -97,6 +97,19 @@ namespace SeaFight.Boards
         }
 
 
+        public delegate string ReprCell(TElem value);
+
+
+        public void Print(int left, int top, ReprCell repr) {
+            for (var row = 0; row < Rows; row++) {
+                for (var col = 0; col < Columns; col++) {
+                    Console.SetCursorPosition(left + col, top+row);
+                    Console.Write(repr(this[row][col]));
+                }
+            }
+        }
+
+
         public class Row
         {
             private readonly BoardOf<TElem> m_board;

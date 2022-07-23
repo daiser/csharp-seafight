@@ -77,18 +77,20 @@ namespace SeaFight.Ai
             }
 
 
-            if (hit.Result == CellState.Hit)
-                // Find points to shoot next
+            if (hit.Result == CellState.Hit) {
+                // Find points to shoot next 
+                todo.Clear();
                 foreach (var end in FindEnds(hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit)))
                     TodoValidPoint(end);
+            }
 
             if (hit.Result == CellState.Kill) {
                 todo.Clear();
                 // Mark all cells around ship as hits.
-                var ship = hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit || c == CellState.Kill);
+                var ship = hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit || c == CellState.Kill).ToArray();
                 foreach (var shipCell in ship) {
                     hitBoard[shipCell] = CellState.Kill;
-                    foreach (var (nCol, nRow, _) in hitBoard.NeighborsOf(shipCell)) hitBoard[nCol][nRow] = CellState.Hit;
+                    foreach (var (nCol, nRow, _) in hitBoard.NeighborsOf(shipCell).Where(n=>n.value==CellState.None)) hitBoard[nCol][nRow] = CellState.Miss;
                 }
             }
         }

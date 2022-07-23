@@ -113,6 +113,23 @@ namespace SeaFightTests
             var shapeA = board.FindSolidShape((0, 0), c => c == "A").ToArray();
             Assert.AreEqual(3, shapeA.Length);
             CollectionAssert.AreEqual(new[] { (0, 0), (1, 0), (2, 0) }, shapeA);
+
+            board = new BoardOf<string>(3, 3);
+            board[(0, 0)] = "A";
+            board[(2, 0)] = "A";
+            board[(2, 1)] = "A";
+
+            shapeA = board.FindSolidShape((0, 0), c => c == "A").ToArray();
+            Assert.AreEqual(1, shapeA.Length);
+            CollectionAssert.AreEqual(new[] { (0, 0) }, shapeA);
+
+            shapeA = board.FindSolidShape((2, 0), c => c == "A").ToArray();
+            Assert.AreEqual(2, shapeA.Length);
+            CollectionAssert.AreEqual(new[] { (2, 0), (2, 1) }, shapeA);
+            
+            shapeA = board.FindSolidShape((2, 1), c => c == "A").ToArray();
+            Assert.AreEqual(2, shapeA.Length);
+            CollectionAssert.AreEqual(new[] { (2, 1), (2, 0) }, shapeA);
         }
     }
 }

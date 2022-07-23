@@ -34,10 +34,16 @@ namespace SeaFight.Ai
         public override int GetHashCode() { return Id; }
 
 
+        public void PrintHitBoard(Player victim, int left, int top, BoardOf<CellState>.ReprCell repr) {
+            GetHitBoard(victim).Print(left, top, repr);
+        }
+
+
         public abstract Shot Shoot(IEnumerable<Player> liveCompetitors);
 
 
         public Fleet StartGame(int boardSize, FleetLayout layout) {
+            m_hitBoards.Clear();
             m_boardSize = boardSize;
             var shipBoard = new ShipBoard(boardSize);
 
@@ -55,16 +61,6 @@ namespace SeaFight.Ai
 
 
         public abstract void UpdateHits(Hit hit);
-
-
-        protected static IEnumerable<int> GetCellIndexes(HitBoard board, params CellState[] values) {
-            return board.Cells.Select((c, i) => new { val = c, idx = i }).Where(e => values.Contains(e.val)).Select(e => e.idx);
-        }
-
-
-        protected static IEnumerable<int> GetUnknownCellsIndexes(HitBoard board) {
-            return board.Cells.Select((c, i) => new { cell = c, idx = i }).Where(e => e.cell == CellState.None).Select(e => e.idx);
-        }
 
 
         protected HitBoard GetHitBoard(Player competitor) {
