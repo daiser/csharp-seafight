@@ -4,20 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using SeaFight.Ai;
-using SeaFight.Armada;
-using SeaFight.Board;
+using SeaFight.Boards;
+using SeaFight.Ships;
 
 namespace SeaFight
 {
-    class Game
+    internal class Game
     {
-        private int Dim { get; }
-
-        private FleetLayout Armada { get; }
-
-        private readonly List<ICompetitor> m_players = new List<ICompetitor>();
-        private readonly List<HitBoard> m_hitBoards = new List<HitBoard>();
+        private const string HIT = "H";
+        private const string KILL = "K";
+        private const string MISS = "-";
         private readonly Dictionary<int, Fleet> m_fleets = new Dictionary<int, Fleet>();
+
+        private readonly Dictionary<int, Player> m_players = new Dictionary<int, Player>();
 
 
         public Game(int dim, FleetLayout fleetLayout) {
@@ -26,7 +25,9 @@ namespace SeaFight
         }
 
 
-        public void RegisterPlayer(ICompetitor player) { m_players.Add(player); }
+        private FleetLayout Armada { get; }
+
+        private int Dim { get; }
 
 
         public void Play(bool visualize = true) {
@@ -34,38 +35,22 @@ namespace SeaFight
 
             Console.CursorVisible = false;
             m_fleets.Clear();
-            m_hitBoards.Clear();
 
-            foreach (var player in m_players) {
-                var board = new Board.Board(Dim);
-                var fleet = player.PlaceFleet(Armada, board);
-                if (fleet == null) throw new InvalidOperationException($"Player #{player.Id:d} failed to place fleet");
-                m_fleets.Add(player.Id, fleet);
+            foreach (var player in m_players.Values) m_fleets[player.Id] = player.StartGame(Dim, Armada);
 
-                //fleets.Add(player.Id, Fleet.fixed_0);
-
-                foreach (var rival in m_players) {
-                    m_hitBoards.Add(new HitBoard(player, rival, Dim));
-                }
-            }
-
-            var kia = new List<ICompetitor>();
+            var alive = new List<int>();
+            alive.AddRange(m_players.Select(p => p.Value.Id));
             var totalShots = 0;
             while (true) // Infinite game loop
-            {
-                foreach (var activePlayer in m_players) {
-                    while (!kia.Contains(activePlayer)) {
+                foreach (var activePlayer in m_players)
+                    while (alive.Contains(activePlayer.Key)) {
                         Debug.WriteLine("Active=" + activePlayer);
-                        var availableHitBoards = m_hitBoards.Where(h => h.Owner.Equals(activePlayer) && !kia.Contains(h.Rival));
-                        if (availableHitBoards.Count() == 1) {
-                            throw new GameOverException(activePlayer, totalShots);
-                        }
+                        if (alive.Count == 1) throw new GameOverException(activePlayer.Value, totalShots);
 
-                        var shot = activePlayer.Shoot(availableHitBoards);
+                        var shot = activePlayer.Value.Shoot(alive.Select(id => m_players[id]));
                         var rivalsFleet = m_fleets[shot.Victim.Id];
-                        var effect = rivalsFleet.TakeShot(shot.Target);
                         var hit = new Hit {
-                            Attacker = activePlayer, Victim = shot.Victim, Target = shot.Target, Effect = effect,
+                            Attacker = activePlayer.Value, Victim = shot.Victim, Target = shot.Target, Result = rivalsFleet.TakeShot(shot)
                         };
                         Debug.WriteLine(hit);
                         //if (effect != ShotEffect.Miss)
@@ -76,24 +61,17 @@ namespace SeaFight
                             Thread.Sleep(100);
                             DisplayHit(hit);
                         }
-                        foreach (var player in m_players) {
-                            var hitboard = m_hitBoards.Where(h => h.Owner.Equals(player) && !kia.Contains(h.Rival));
-                            player.UpdateHits(hitboard, hit);
-                        }
-                        if (effect == ShotEffect.Kill && !rivalsFleet.IsAlive()) {
-                            kia.Add(shot.Victim);
+                        foreach (var player in m_players.Values) player.UpdateHits(hit);
+                        if (hit.Result == CellState.Kill && !rivalsFleet.IsAlive) {
+                            alive.Remove(hit.Victim.Id);
                             Debug.WriteLine("{0}: GG", hit.Victim);
                         }
-                        if (effect == ShotEffect.Miss) break;
+                        if (hit.Result == CellState.Miss) break;
                     }
-                }
-            }
         }
 
 
-        private const string HIT = "H";
-        private const string MISS = "-";
-        private const string KILL = "K";
+        public void RegisterPlayer(Player player) { m_players[player.Id] = player; }
 
 
         private void DisplayHit(Hit hit) {
@@ -101,15 +79,15 @@ namespace SeaFight
             var top = 0;
             var left = offset * (Dim + 5);
 
-            Console.SetCursorPosition(left + hit.Target.Col, top + hit.Target.Row);
-            switch (hit.Effect) {
-                case ShotEffect.Hit:
+            Console.SetCursorPosition(left + hit.Target.col, top + hit.Target.row);
+            switch (hit.Result) {
+                case CellState.Hit:
                     Console.Write(HIT);
                     break;
-                case ShotEffect.Kill:
+                case CellState.Kill:
                     Console.Write(KILL);
                     break;
-                case ShotEffect.Miss:
+                case CellState.Miss:
                 default:
                     Console.Write(MISS);
                     break;

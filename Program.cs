@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using SeaFight.Ai;
-using SeaFight.Armada;
+using SeaFight.Ships;
 
 namespace SeaFight
 {
-    class Program
+    internal static class Program
     {
         private const int GAMES_TO_PLAY = 1000;
 
 
-        static void Main(string[] args) {
+        private static void Main(string[] args) {
             var generator = new Random();
 
             //Ship ship = new Ship(new[]{
@@ -32,9 +32,7 @@ namespace SeaFight
                 var amateurWins = 0;
                 for (var gameNo = 0; gameNo < GAMES_TO_PLAY; gameNo++) {
                     var game = new Game(10, FleetLayout.Classic);
-                    foreach (var player in players) {
-                        game.RegisterPlayer(player);
-                    }
+                    foreach (var player in players) game.RegisterPlayer(player);
 
                     try {
                         game.Play(false);

@@ -1,4 +1,4 @@
-﻿namespace SeaFight.Board
+﻿namespace SeaFight.Boards
 {
     public class SquareBoardOf<T>: BoardOf<T>
     {

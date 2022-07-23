@@ -1,92 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using SeaFight.Armada;
-using SeaFight.Board;
+using SeaFight.Boards;
+using SeaFight.Ships;
 
 namespace SeaFight.Ai
 {
-    abstract class Player: ICompetitor
+    public abstract class Player
     {
-        protected const byte CELL_UNKNOWN = 0;
-        protected const byte CELL_MISS = 1;
-        protected const byte CELL_HIT = 2;
-        protected const byte CELL_KILL = 3;
-
-        protected static readonly byte[] HitValues = { CELL_MISS, CELL_HIT, CELL_KILL };
-
         private static readonly object s_latch = new object();
         private static int s_nextId;
+
+        private readonly Dictionary<int, HitBoard> m_hitBoards = new Dictionary<int, HitBoard>();
+        protected readonly Random Rng;
+        private int m_boardSize;
+
+
+        protected Player(Random rng) {
+            Rng = rng ?? throw new ArgumentNullException(nameof(rng));
+            Id = GetNextId();
+        }
+
+
+        public int Id { get; }
+
+
+        public override bool Equals(object other) {
+            if (!(other is Player o)) return false;
+            return o.Id == Id;
+        }
+
+
+        public override int GetHashCode() { return Id; }
+
+
+        public abstract Shot Shoot(IEnumerable<Player> liveCompetitors);
+
+
+        public Fleet StartGame(int boardSize, FleetLayout layout) {
+            m_boardSize = boardSize;
+            var shipBoard = new ShipBoard(boardSize);
+
+            foreach (var shipSize in layout) {
+                var freeCells = shipBoard.GetFreePlaces(shipSize).ToArray();
+                if (freeCells.Length == 0) throw new InvalidOperationException($"failed to place ship of size {shipSize}: no space");
+
+                var (col, row, horizontal) = freeCells.PickRandom(Rng);
+                if (!shipBoard.PlaceShip((col, row), shipSize, horizontal))
+                    throw new InvalidOperationException($"failed to place ship of size {shipSize}: free space detection failed");
+            }
+
+            return shipBoard.Commit();
+        }
+
+
+        public abstract void UpdateHits(Hit hit);
+
+
+        protected static IEnumerable<int> GetCellIndexes(HitBoard board, params CellState[] values) {
+            return board.Cells.Select((c, i) => new { val = c, idx = i }).Where(e => values.Contains(e.val)).Select(e => e.idx);
+        }
+
+
+        protected static IEnumerable<int> GetUnknownCellsIndexes(HitBoard board) {
+            return board.Cells.Select((c, i) => new { cell = c, idx = i }).Where(e => e.cell == CellState.None).Select(e => e.idx);
+        }
+
+
+        protected HitBoard GetHitBoard(Player competitor) {
+            if (!m_hitBoards.ContainsKey(competitor.Id)) m_hitBoards[competitor.Id] = new HitBoard(m_boardSize);
+            return m_hitBoards[competitor.Id];
+        }
+
+
+        protected void SaveHit(Hit hit) { GetHitBoard(hit.Victim)[hit.Target] = hit.Result; }
 
 
         private static int GetNextId() {
             lock (s_latch) {
                 return ++s_nextId;
             }
-        }
-
-
-        private readonly Features m_features;
-
-        public int Id { get; }
-
-
-        public Player(Features features) {
-            Id = GetNextId();
-            m_features = features;
-        }
-
-
-        protected IEnumerable<HitBoard> PreSelectBoard(IEnumerable<HitBoard> boards) {
-            if (m_features.HasFlag(Features.DontShootYourself)) {
-                return boards.Where(b => !b.Rival.Equals(this));
-            }
-            return boards;
-        }
-
-
-        protected HitBoard SaveHit(IEnumerable<HitBoard> boards, Hit hit) {
-            if (hit.Victim.Equals(this)) return null;
-
-            HitBoard selectedBoard = null;
-
-            if ((m_features.HasFlag(Features.RememberOwnShots) && hit.Attacker.Equals(this)) ||
-                (m_features.HasFlag(Features.RememberRivalShots) && !hit.Attacker.Equals(this))) {
-                selectedBoard = boards.First(b => b.Owner.Equals(this) && b.Rival.Equals(hit.Victim));
-                selectedBoard.Set(hit.Target, HitValues[(int)hit.Effect]);
-            }
-
-            return selectedBoard;
-        }
-
-
-        protected static IEnumerable<int> GetUnknownCellsIndexes(HitBoard board) {
-            return board.Cells.Select((c, i) => new { cell = c, idx = i }).Where(e => e.cell == CELL_UNKNOWN).Select(e => e.idx);
-        }
-
-
-        protected static IEnumerable<int> GetCellIndexes(HitBoard board, params byte[] values) {
-            return board.Cells.Select((c, i) => new { val = c, idx = i }).Where(e => values.Contains(e.val)).Select(e => e.idx);
-        }
-
-
-        public override string ToString() { return $"Player #{Id:d}"; }
-
-
-        public abstract Fleet PlaceFleet(FleetLayout layout, Board.Board board);
-
-
-        public abstract Shot Shoot(IEnumerable<HitBoard> boards);
-
-
-        public abstract void UpdateHits(IEnumerable<HitBoard> boards, Hit hit);
-
-
-        public override int GetHashCode() { return Id; }
-
-
-        public override bool Equals(object other) {
-            if (!(other is IIdentifiableCompetitor o)) return false;
-            return o.Id == Id;
         }
     }
 }

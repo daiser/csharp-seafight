@@ -1,34 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using SeaFight.Armada;
-using SeaFight.Board;
+using SeaFight.Boards;
 
 namespace SeaFight.Ai
 {
-    class Monkey: Player, IHaveSkill
+    internal class Monkey: Player
     {
-        private readonly Random m_rnd;
-
-        public Skill Skill => Skill.Monkey;
+        public Monkey(Random generator): base(generator) { }
 
 
-        public Monkey(Random generator = null): base(Features.None) { m_rnd = generator ?? new Random(); }
+        public override Shot Shoot(IEnumerable<Player> liveCompetitors) {
+            // Monkey can shoot anybody. Even itself.
+            var victim = liveCompetitors.PickRandom(Rng);
+            var hitBoard = GetHitBoard(victim);
+            return new Shot { Victim = victim, Target = (Rng.Next() % hitBoard.Columns, Rng.Next() % hitBoard.Rows) };
+        }
 
 
         public override string ToString() { return $"Monkey #{Id:d}"; }
 
 
-        public override Armada.Fleet PlaceFleet(FleetLayout layout, Board.Board board) { return board.PlaceFleet(layout, m_rnd); }
-
-
-        public override Shot Shoot(IEnumerable<HitBoard> boards) {
-            var bs = boards.ToArray();
-            var board = bs[m_rnd.Next() % bs.Length];
-            return new Shot { Victim = board.Rival, Target = new Point(m_rnd.Next() % board.XDim, m_rnd.Next() % board.YDim) };
+        public override void UpdateHits(Hit hit) {
+            // Monkey does not care about results.
         }
-
-
-        public override void UpdateHits(IEnumerable<HitBoard> board, Hit hit) { }
     }
 }
