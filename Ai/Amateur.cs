@@ -44,11 +44,6 @@ namespace SeaFight.Ai
             var todo = GetTodo(hit.Victim);
 
 
-            void TodoValidPoint((int col, int row) point) {
-                if (hitBoard.Contains(point)) todo.Add(point);
-            }
-
-
             IEnumerable<(int col, int row)> FindEnds(IEnumerable<(int col, int row)> solidShape) {
                 var s = solidShape as (int col, int row)[] ?? solidShape.ToArray();
                 var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
@@ -80,8 +75,7 @@ namespace SeaFight.Ai
             if (hit.Result == CellState.Hit) {
                 // Find points to shoot next 
                 todo.Clear();
-                foreach (var end in FindEnds(hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit)))
-                    TodoValidPoint(end);
+                todo.AddRange(FindEnds(hitBoard.FindSolidShape(hit.Target, c => c == CellState.Hit)).Where(end => hitBoard.Contains(end)));
             }
 
             if (hit.Result == CellState.Kill) {
