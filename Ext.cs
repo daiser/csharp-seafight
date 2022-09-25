@@ -10,14 +10,18 @@ namespace SeaFight
         public static Shape DetectShape(this IEnumerable<(int col, int row)> shape) {
             var s = shape as (int col, int row)[] ?? shape.ToArray();
 
-            var cols = s.Select(c => c.col).Distinct().OrderBy(v => v).ToArray();
-            var rows = s.Select(c => c.row).Distinct().OrderBy(v => v).ToArray();
+            var colsCount = s.Select(c => c.col).Distinct().Count();
+            var rowsCount = s.Select(c => c.row).Distinct().Count();
 
-            if (cols.Length == 1 && rows.Length == 1) return Shape.Point;
-            if (cols.Length > 1 && rows.Length > 1) return Shape.None;
-
-            if (cols.Length == 1) return Shape.Vertical;
-            return Shape.Horizontal;
+            if (colsCount != 1 && rowsCount != 1) return Shape.None;
+            switch (colsCount) {
+                case 1 when rowsCount == 1:
+                    return Shape.Point;
+                case 1:
+                    return Shape.Vertical;
+                default:
+                    return Shape.Horizontal;
+            }
         }
 
 
@@ -27,8 +31,8 @@ namespace SeaFight
 
             if (v.Length == 0) throw new InvalidOperationException("Can't pick random value");
 
-            var rnd = generator ?? new Random();
-            return v[rnd.Next(0, v.Length)];
+            var rng = generator ?? new Random();
+            return v[rng.Next(0, v.Length)];
         }
 
 
